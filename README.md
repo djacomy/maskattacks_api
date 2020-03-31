@@ -7,16 +7,14 @@ Docker contained project
 List of endpoints:
 
 - De manière anonyme
+  - POST /api/signup - s'enroller
+  - POST /api/login - se connecter et recupperer un JWT tocker
 
-POST /api/signup - s'enroller
-POST /api/login - se connecter et recupperer un JWT tocker
 
-- Avec autentification (Authorization: Bearer <JWT token>)
-
-GET /user/<id>: Recupere un utilisateurs
-PUT /user/<id>:  Modifie le profile d'un utilisateur
-DELETE /user/<id>: Supprime un utilisateur 
-
+- Avec authentification (Authorization: Bearer <JWT token>)
+    - GET /user/<id>: Recupere un utilisateurs
+    - PUT /user/<id>:  Modifie le profile d'un utilisateur
+    - DELETE /user/<id>: Supprime un utilisateur 
 
 
 ## Installation
