@@ -44,4 +44,4 @@ seaborn==0.9.0
 six==1.10.0
 SQLAlchemy==0.9.8
 toolz==0.10.0
-Werkzeug==0.10.1
+Werkzeug==0.15.3
