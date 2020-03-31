@@ -1,0 +1,41 @@
+version: '3.5'
+
+services:
+  server:
+    image: tomplex/python-postgres:3.6
+    working_dir: /mnt
+    volumes:
+      - .:/mnt
+    links:
+     - db
+    ports:
+      - '5000:5000'
+    environment:
+      PYTHONPATH: $PYTHONPATH:src
+      PYTHONUSERBASE: /mnt/vendor
+      IMPORT_PATH: /mnt/test/fixture
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_PW: postgres
+    command: python src/server.py
+    networks:
+      - postgres
+
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - postgres
+
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    postgres:
