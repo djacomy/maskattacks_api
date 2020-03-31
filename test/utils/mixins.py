@@ -55,7 +55,7 @@ class BaseAuthMixin(object):
 
         return self.client.post(
             url,
-            data=params,
+            json=params,
             headers={'Authorization': 'Bearer ' + token},
             content_type='application/json'
         )

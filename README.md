@@ -7,15 +7,35 @@ Docker contained project
 List of endpoints:
 
 - De manière anonyme
-  - POST /api/signup - s'enroller
-  - POST /api/login - se connecter et recupperer un JWT tocker
+  - POST /api/auth/signup - s'enroller
+  - POST /api/auth/login - se connecter et recupperer un JWT tocker
 
 
 - Avec authentification (Authorization: Bearer <JWT token>)
-    - GET /user/<id>: Recupere un utilisateurs
-    - PUT /user/<id>:  Modifie le profile d'un utilisateur
-    - DELETE /user/<id>: Supprime un utilisateur 
-
+    - GET /api//user/<id>: Recupere un utilisateurs
+    - PUT /api//user/<id>:  Modifie le profile d'un utilisateur
+    - DELETE /api//user/<id>: Supprime un utilisateur 
+    
+    - GET /api/stocks: Récuperer la liste des stocks
+    - GET /api/stocks/<id>: Récuperer un stock
+    - PUT /api/stocks/<id>:  Modifier la quantite d'un stock
+    
+    - GET /api/request: liste des requetes
+    - POST /api/requests: soumettre une requetes
+    
+    - GET /api/kits: Récuperer la liste des kits
+    - GET /api/kits/<id>: Recupérer un kit
+    - PUT /api/kits/<id>:  Modifier le statut d'un kit et/ou l'assinger a un transporteur
+    
+    - GET /api/protections: Recupere la liste des protections
+    - GET /api/protections/<id>: Recupere une protection
+    - PUT /api/protections/<id>:  Modifier le statut d'un protection et/ou l'assinger a un transporteur
+    
+    - GET /api/batches: Récuperer la liste des lots
+    - POST /api/batches  params {"products":[1,2]): creer un batch a partir d'un liste de prouit de meme destination
+    - GET /api/batches/<id>:  Récuperer lot
+    - PUT /api/batches/<id>:  Modifier statut lot et/ou assigner lots.
+    
 
 ## Installation
 

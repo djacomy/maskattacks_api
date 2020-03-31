@@ -28,7 +28,13 @@ from route.auth import auth_blueprint
 server.register_blueprint(auth_blueprint, url_prefix="/api/auth")
 
 from route.user import user_blueprint
-server.register_blueprint(user_blueprint, url_prefix="/api/user")
+server.register_blueprint(user_blueprint, url_prefix="/api/users")
+
+from route.product import product_blueprint
+server.register_blueprint(product_blueprint, url_prefix="/api")
+
+from route.stock import stock_blueprint
+server.register_blueprint(stock_blueprint, url_prefix="/api/stocks")
 
 
 if __name__ == '__main__':
