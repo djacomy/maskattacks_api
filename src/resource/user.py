@@ -6,7 +6,6 @@ from flask_jwt_extended import create_access_token, jwt_required
 
 from model.abc import db
 from model import User
-from client import superhero
 from util import parse_params
 
 

@@ -22,11 +22,13 @@ CORS(
 )
 
 from route.common import common_blueprint
-server.register_blueprint(common_blueprint)
+server.register_blueprint(common_blueprint, url_prefix="/api/routes")
+
+from route.auth import auth_blueprint
+server.register_blueprint(auth_blueprint, url_prefix="/api/auth")
 
 from route.user import user_blueprint
-server.register_blueprint(user_blueprint)
-
+server.register_blueprint(user_blueprint, url_prefix="/api/user")
 
 
 if __name__ == '__main__':

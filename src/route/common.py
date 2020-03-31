@@ -8,7 +8,7 @@ common_blueprint = Blueprint('common', __name__)
 common_blueprint_api = Api(common_blueprint)
 
 
-@common_blueprint.route('/routes')
+@common_blueprint.route('/')
 def list_routes():
     output = []
     for rule in current_app.url_map.iter_rules():

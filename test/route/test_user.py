@@ -7,6 +7,13 @@ from test.utils.mixins import BaseTest, BaseAuthMixin
 
 class TestAuth(BaseTest):
 
+    def test_routes(self):
+        response = self.client.get(
+            '/api/routes/'
+
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_login(self):
         params = {
             "email": 'joe@example.fr',
