@@ -20,7 +20,7 @@ CORS(
     resources={r"/*": {"origins": "*"}},
     headers=['Content-Type', 'X-Requested-With', 'Authorization']
 )
-from route.api import api_blueprint, api
+from route.api import api_blueprint
 server.register_blueprint(api_blueprint, url_prefix="/api")
 
 from route.common import common_blueprint
