@@ -1,8 +1,11 @@
 import datetime
 
 from flask import request, jsonify, g
-from flask.ext.restful import Resource
 from flask_jwt_extended import create_access_token, jwt_required
+from flask_restful import Resource, marshal_with
+from flask_restful_swagger import swagger
+
+from serializer.stock import StockSerializer, StockListSerializer
 
 from model.abc import db
 from model import User
@@ -17,6 +20,11 @@ stocks_list = [{"id": 1, "provider": "toto", 'kit_type': "kit1", "count": 10}]
 class StocksApi(Resource):
     method_decorators = [jwt_required]
 
+    @swagger.operation(
+        notes='List stocks',
+        responseClass=StockListSerializer,
+        nickname='stock-list')
+    @marshal_with(StockListSerializer.resource_fields)
     def get(self):
         return {'stocks': stocks_list}, 200
 

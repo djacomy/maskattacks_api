@@ -20,21 +20,11 @@ CORS(
     resources={r"/*": {"origins": "*"}},
     headers=['Content-Type', 'X-Requested-With', 'Authorization']
 )
+from route.api import api_blueprint, api
+server.register_blueprint(api_blueprint, url_prefix="/api")
 
 from route.common import common_blueprint
-server.register_blueprint(common_blueprint, url_prefix="/api/routes")
-
-from route.auth import auth_blueprint
-server.register_blueprint(auth_blueprint, url_prefix="/api/auth")
-
-from route.user import user_blueprint
-server.register_blueprint(user_blueprint, url_prefix="/api/users")
-
-from route.product import product_blueprint
-server.register_blueprint(product_blueprint, url_prefix="/api")
-
-from route.stock import stock_blueprint
-server.register_blueprint(stock_blueprint, url_prefix="/api/stocks")
+server.register_blueprint(common_blueprint, url_prefix="/")
 
 
 if __name__ == '__main__':

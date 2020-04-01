@@ -1,8 +1,6 @@
 from flask import Blueprint, jsonify, current_app
-from flask.ext.restful import Api
-from flask_httpauth import HTTPBasicAuth
+from flask_restful_swagger_3 import Api
 
-auth = HTTPBasicAuth()
 
 common_blueprint = Blueprint('common', __name__)
 common_blueprint_api = Api(common_blueprint)
