@@ -6,6 +6,7 @@ from test.utils.mixins import BaseTest, BaseAuthMixin
 
 
 class TestStock(BaseAuthMixin, BaseTest):
+    fixtures = ["users.json"]
 
     def test_get_stocks(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
@@ -17,7 +18,7 @@ class TestStock(BaseAuthMixin, BaseTest):
 
     def test_update_stock(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
-        url = 'api/stocks/%d' % self.user_id
+        url = 'api/stocks/1'
         response = self.put(url, token, {"id": 1, "provider": "toto", 'kit_type': "kit1", "count": 11})
         self.assertEqual(response.status_code, 200)
         result = json.loads(response.data.decode('utf-8'))

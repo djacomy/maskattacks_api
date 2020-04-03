@@ -5,6 +5,7 @@ from test.utils.mixins import BaseTest, BaseAuthMixin
 
 
 class TestRequest(BaseAuthMixin, BaseTest):
+    fixtures = ["users.json"]
 
     def test_get_requests(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
@@ -63,6 +64,7 @@ class TestRequest(BaseAuthMixin, BaseTest):
 
 
 class TestKits(BaseAuthMixin, BaseTest):
+    fixtures = ["users.json"]
 
     def test_get_kits(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
@@ -86,6 +88,7 @@ class TestKits(BaseAuthMixin, BaseTest):
 
 
 class TestProtection(BaseAuthMixin, BaseTest):
+    fixtures = ["users.json"]
 
     def test_get_protections_bad_item(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
@@ -118,6 +121,7 @@ class TestProtection(BaseAuthMixin, BaseTest):
 
 
 class TestBatch(BaseAuthMixin, BaseTest):
+    fixtures = ["users.json"]
 
     def test_get_batches(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')

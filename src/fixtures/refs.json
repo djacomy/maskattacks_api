@@ -1,0 +1,307 @@
+[
+  {
+    "table": "orga_reference",
+    "records": [
+      {
+        "id": 1,
+        "code": "running",
+        "type": 14,
+        "libelle": "En Cours de Traitement"
+      },
+      {
+        "id": 2,
+        "code": "active",
+        "type": 14,
+        "libelle": "Actif dans le circuit"
+      },
+      {
+        "id": 3,
+        "code": "suspend",
+        "type": 14,
+        "libelle": "Paused"
+      },
+      {
+        "id": 4,
+        "code": "midtime",
+        "type": 15,
+        "libelle": "Mi-Temps"
+      },
+      {
+        "id": 5,
+        "code": "fulltime",
+        "type": 15,
+        "libelle": "Plein Temps"
+      },
+      {
+        "id": 6,
+        "code": "na",
+        "type": 15,
+        "libelle": "Non Applicable"
+      },
+      {
+        "id": 7,
+        "code": "man",
+        "type": 16,
+        "libelle": "Manufact"
+      },
+      {
+        "id": 8,
+        "code": "tra",
+        "type": 16,
+        "libelle": "Transport"
+      },
+      {
+        "id": 9,
+        "code": "cus",
+        "type": 16,
+        "libelle": "Customer"
+      },
+      {
+        "id": 10,
+        "code": "pro",
+        "type": 16,
+        "libelle": "Provider"
+      },
+      {
+        "id": 11,
+        "code": "cou",
+        "type": 1,
+        "libelle": "Couturier"
+      },
+      {
+        "id": 12,
+        "code": "print3d",
+        "type": 1,
+        "libelle": "Impresseur3D"
+      },
+      {
+        "id": 13,
+        "code": "low",
+        "type": 2,
+        "libelle": "Faible"
+      },
+      {
+        "id": 14,
+        "code": "medium",
+        "type": 2,
+        "libelle": "Moyenne"
+      },
+      {
+        "id": 15,
+        "code": "pro",
+        "type": 3,
+        "libelle": "Professionnel"
+      },
+      {
+        "id": 16,
+        "code": "semipro",
+        "type": 3,
+        "libelle": "Confirm\u00e9"
+      },
+      {
+        "id": 17,
+        "code": "noexp",
+        "type": 3,
+        "libelle": "Amateur"
+      },
+      {
+        "id": 18,
+        "code": "max",
+        "type": 4,
+        "libelle": "Qualit\u00e9 Max"
+      },
+      {
+        "id": 19,
+        "code": "good",
+        "type": 4,
+        "libelle": "Qualit\u00e9 Bonne"
+      },
+      {
+        "id": 20,
+        "code": "noexp",
+        "type": 4,
+        "libelle": "Qualit\u00e9 Amateur"
+      },
+      {
+        "id": 21,
+        "code": "na",
+        "type": 4,
+        "libelle": "Non Applicable"
+      },
+      {
+        "id": 22,
+        "code": "volonteer",
+        "type": 5,
+        "libelle": "B\u00e9n\u00e9vole"
+      },
+      {
+        "id": 23,
+        "code": "sharedprice",
+        "type": 5,
+        "libelle": "Montant revers\u00e9"
+      },
+      {
+        "id": 24,
+        "code": "sharedprime",
+        "type": 5,
+        "libelle": "Part revers\u00e9e"
+      },
+      {
+        "id": 25,
+        "code": "tran",
+        "type": 6,
+        "libelle": "Transporter"
+      },
+      {
+        "id": 26,
+        "code": "truck",
+        "type": 7,
+        "libelle": "Camionnette"
+      },
+      {
+        "id": 27,
+        "code": "batch30",
+        "type": 7,
+        "libelle": "30 lots"
+      },
+      {
+        "id": 28,
+        "code": "class",
+        "type": 8,
+        "libelle": "class"
+      },
+      {
+        "id": 29,
+        "code": "volume",
+        "type": 8,
+        "libelle": "volume"
+      },
+      {
+        "id": 30,
+        "code": "units",
+        "type": 8,
+        "libelle": "units"
+      },
+      {
+        "id": 31,
+        "code": "km",
+        "type": 9,
+        "libelle": "km"
+      },
+      {
+        "id": 32,
+        "code": "dept",
+        "type": 9,
+        "libelle": "departement"
+      },
+      {
+        "id": 33,
+        "code": "fm",
+        "type": 10,
+        "libelle": "Fournisseur mat\u00e9riaux"
+      },
+      {
+        "id": 34,
+        "code": "pre",
+        "type": 10,
+        "libelle": "Pressing"
+      },
+      {
+        "id": 35,
+        "code": "ent",
+        "type": 10,
+        "libelle": "Entrep\u00f4t"
+      },
+      {
+        "id": 36,
+        "code": "fta",
+        "type": 11,
+        "libelle": "Fournisseur Textile Classe A"
+      },
+      {
+        "id": 37,
+        "code": "ftb",
+        "type": 11,
+        "libelle": "Fournisseur Textile Classe B"
+      },
+      {
+        "id": 38,
+        "code": "ft3d",
+        "type": 11,
+        "libelle": "Fournisseur Impression 3D"
+      },
+      {
+        "id": 39,
+        "code": "med",
+        "type": 12,
+        "libelle": "M\u00e9dical"
+      },
+      {
+        "id": 40,
+        "code": "pres",
+        "type": 12,
+        "libelle": "Pressing"
+      },
+      {
+        "id": 41,
+        "code": "ent",
+        "type": 12,
+        "libelle": "Entrep\u00f4t"
+      },
+      {
+        "id": 42,
+        "code": "ins",
+        "type": 12,
+        "libelle": "Institution"
+      },
+      {
+        "id": 43,
+        "code": "com",
+        "type": 12,
+        "libelle": "Commerce"
+      },
+      {
+        "id": 44,
+        "code": "gsu",
+        "type": 12,
+        "libelle": "Grande Surface"
+      },
+      {
+        "id": 45,
+        "code": "hop",
+        "type": 13,
+        "libelle": "Hopital"
+      },
+      {
+        "id": 46,
+        "code": "cli",
+        "type": 13,
+        "libelle": "Clinique"
+      },
+      {
+        "id": 47,
+        "code": "soilib",
+        "type": 13,
+        "libelle": "Soignant Lib\u00e9rale"
+      },
+      {
+        "id": 48,
+        "code": "enta",
+        "type": 13,
+        "libelle": "Entreprise Classe A"
+      },
+      {
+        "id": 49,
+        "code": "entb",
+        "type": 13,
+        "libelle": "Entreprise Classe B"
+      },
+      {
+        "id": 50,
+        "code": "entc",
+        "type": 13,
+        "libelle": "Entreprise Classe C"
+      }
+    ]
+  }
+]

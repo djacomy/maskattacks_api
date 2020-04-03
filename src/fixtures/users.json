@@ -1,0 +1,17 @@
+[
+  {
+    "model": "model.User",
+    "records": [
+      {
+        "id": 1,
+        "email": "joe@example.fr",
+        "firstname": null,
+        "lastname": null,
+        "password": "super-secret-password",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": null
+      }
+    ]
+  }
+]

@@ -1,0 +1,51 @@
+reference,code,libelle
+orga_status,running,En Cours de Traitement
+orga_status,active,Actif dans le circuit
+orga_status,suspend,Paused
+orga_availability,midtime,Mi-Temps
+orga_availability,fulltime,Plein Temps
+orga_availability,na,Non Applicable
+orga_role,man,Manufact
+orga_role,tra,Transport
+orga_role,cus,Customer
+orga_role,pro,Provider
+manufactor_type,cou,Couturier
+manufactor_type,print3d,Impresseur3D
+manufactor_capacity,low,Faible
+manufactor_capacity,medium,Moyenne
+skill_level,pro,Professionnel
+skill_level,semipro,Confirmé
+skill_level,noexp,Amateur
+quality_need,max,Qualité Max
+quality_need,good,Qualité Bonne
+quality_need,noexp,Qualité Amateur
+quality_need,na,Non Applicable
+contract_type,volonteer,Bénévole
+contract_type,sharedprice,Montant reversé
+contract_type,sharedprime,Part reversée
+transporter_type,tran,Transporter
+capacity_value,truck,Camionnette
+capacity_value,batch30,30 lots
+capacity_type,class,class
+capacity_type,volume,volume
+capacity_type,units,units
+range_type,km,km
+range_type,dept,departement
+provider_type,fm,Fournisseur matériaux
+provider_type,pre,Pressing
+provider_type,ent,Entrepôt
+provider_subtype,fta,Fournisseur Textile Classe A
+provider_subtype,ftb,Fournisseur Textile Classe B
+provider_subtype,ft3d,Fournisseur Impression 3D
+customer_type,med,Médical
+customer_type,pres,Pressing
+customer_type,ent,Entrepôt
+customer_type,ins,Institution
+customer_type,com,Commerce
+customer_type,gsu,Grande Surface
+customer_subtype,hop,Hopital
+customer_subtype,cli,Clinique
+customer_subtype,soilib,Soignant Libérale
+customer_subtype,enta,Entreprise Classe A
+customer_subtype,entb,Entreprise Classe B
+customer_subtype,entc,Entreprise Classe C

@@ -1,9 +1,11 @@
 """Define an Abstract Base Class (ABC) for models."""
 import datetime
+import enum
 from weakref import WeakValueDictionary
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
 from sqlalchemy.orm import aliased
+import sqlalchemy.types as types
 
 
 db = SQLAlchemy()
@@ -30,6 +32,8 @@ class BaseModel():
         Based on the models columns """
 
     print_filter = ()
+    to_json_filter = ()
+
     def __repr__(self):
         """ Define a base way to print models
             Columns inside `print_filter` are excluded """
@@ -39,13 +43,20 @@ class BaseModel():
             if column not in self.print_filter
         })
 
-    to_json_filter = ()
     @property
     def json(self):
         """ Define a base way to jsonify models
             Columns inside `to_json_filter` are excluded """
+
+        def get_value(value):
+            if isinstance(value, datetime.date):
+                return value.isoformat()
+            if isinstance(value, enum.Enum):
+                return  value.value
+            return value
+
         return {
-            column: value if not isinstance(value, datetime.date) else value.isoformat()
+            column: get_value(value)
             for column, value in self._to_dict().items()
             if column not in self.to_json_filter
         }
@@ -60,3 +71,29 @@ class BaseModel():
             column.key: getattr(self, column.key)
             for column in inspect(self.__class__).attrs
         }
+
+    # Method to save user to DB
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    # Method to remove user from DB
+    def remove(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+class ChoiceType(types.TypeDecorator):
+
+    impl = types.String
+
+    def __init__(self, choices, **kw):
+        self.choices = dict(choices)
+        super(ChoiceType, self).__init__(**kw)
+
+    def process_bind_param(self, value, dialect):
+        return [k for k, v in self.choices.iteritems() if v == value][0]
+
+    def process_result_value(self, value, dialect):
+        return self.choices[value]
+

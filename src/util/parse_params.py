@@ -1,5 +1,5 @@
 from functools import wraps
-from flask.ext.restful import reqparse
+from flask_restful import reqparse
 
 
 def parse_params(*arguments):

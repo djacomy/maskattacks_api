@@ -40,7 +40,7 @@ List of endpoints:
 ## Installation
 
 ```
-docker-compose run --rm server pip install -r requirements.txt --user --upgrade
+docker-compose run --rm server pip install -r requirements.txt --user --upgrade --no-warn-script-location
 docker-compose up -d server
 ```
 
@@ -72,7 +72,7 @@ docker-compose run --rm server python src/manage.py db upgrade
 ## Run tests
 
 ```shell
-docker-compose run --rm server python -m unittest
+docker-compose run --rm testserver python -m unittest
 ```
 
 ## Commands

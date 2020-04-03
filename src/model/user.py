@@ -1,3 +1,4 @@
+import datetime
 from flask_bcrypt import generate_password_hash, check_password_hash
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,17 +10,24 @@ class User(db.Model, BaseModel):
     __tablename__ = 'auth_user'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    username = db.Column(db.String(120), unique=True)
+    email = db.Column(db.String(30), unique=True)
+    firstname = db.Column(db.String(30))
+    lastname = db.Column(db.String(30))
     password = db.Column(db.String(120))
 
-    def __init__(self, email=None, password=None, username=None):
+    is_admin = db.Column(db.Boolean, default=False)
+    is_manager = db.Column(db.Boolean, default=False)
+
+    organization_id = db.Column(db.Integer, db.ForeignKey('orga_organization.id'))
+    organization = db.relationship("Organisation", back_populates="users")
+
+    def __init__(self, email=None, password=None, **kwargs):
         if email:
             self.email = email.lower()
         if password:
             self.set_password(password)
-        if username:
-            self.username = username
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -27,31 +35,14 @@ class User(db.Model, BaseModel):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
         return self.email
 
-    def json(self):
-        return {
-            "id": self.id,
-            "username": self.username
-        }, 200
-
-    # Method to save user to DB
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    # Method to remove user from DB
-    def remove(self):
-        db.session.delete(self)
-        db.session.commit()
+    to_json_filter = ('password', )
 
     # Class method which finds user from DB by username
+
     @classmethod
     def find_user_by_username(cls, username):
         return cls.query.filter_by(username=username).first()

@@ -1,31 +1,27 @@
 import unittest
 import json
+import os
+from builtins import super
+import config
 
-from model.abc import db
-from model import User
+from flask_fixtures import FixturesMixin
+
 from server import server
+from model.abc import db
+
+server.config['TESTING'] = True
 
 
-class BaseTest(unittest.TestCase):
+class BaseTest(unittest.TestCase, FixturesMixin):
+    app = server
+    db = db
 
-    @classmethod
-    def setUpClass(cls):
-        db.create_all()
-        user = User('joe@example.fr', 'super-secret-password', 'joe')
-        db.session.add(user)
-        db.session.commit()
-        cls.user_id = user.id
-        server.config['TESTING'] = True
-        cls.client = server.test_client()
+    def setUp(self):
+        self.client = server.test_client()
 
-    @classmethod
-    def tearDownClass(cls):
-        db.session.rollback()
-        db.drop_all()
-
-    @classmethod
-    def tearDown(cls):
-        db.session.rollback()
+    def tearDown(self):
+        # remove client session if not cannot drop test database
+        db.session.remove()
 
 
 class BaseAuthMixin(object):

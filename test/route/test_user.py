@@ -1,16 +1,17 @@
 import json
-
 import unittest
+
 from model.user import User
+
 from test.utils.mixins import BaseTest, BaseAuthMixin
 
 
 class TestAuth(BaseTest):
+    fixtures = ["users.json"]
 
     def test_routes(self):
         response = self.client.get(
-            '/api/routes/'
-
+            '/'
         )
         self.assertEqual(response.status_code, 200)
 
@@ -47,38 +48,51 @@ class TestAuth(BaseTest):
 
 
 class TestUser(BaseAuthMixin, BaseTest):
+    fixtures = ["users.json"]
+
+    #def test_ref(self):
+    #    self.assertEqual(50, Reference.query.count())
 
     def test_get_user(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
-        url = 'api/users/%d' % self.user_id
+        url = 'api/users/1'
         response = self.get(url, token)
         self.assertEqual(response.status_code, 200)
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(result, {'id': 1, 'username': 'joe'})
+        for k, v in {'email': 'joe@example.fr',
+                     'firstname': None,
+                     'id': 1,
+                     'is_admin': False,
+                     'is_manager': False,
+                     'lastname': None,
+                     'organization': None,
+                     'organization_id': None
+                     }.items():
+            self.assertIn(k, result)
+            self.assertEqual(result[k], v)
 
     def test_update_user(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
-        url = 'api/users/%d' % self.user_id
-        response = self.put(url, token, {'username': "titi"})
+        url = 'api/users/1'
+        response = self.put(url, token, {'firstname': "titi", "lastname": 'toto'})
         self.assertEqual(response.status_code, 200)
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(result, {'id': 1, 'username': 'titi'})
+
+        for k, v in {'email': 'joe@example.fr',
+                     'firstname': 'titi',
+                     'id': 1,
+                     'is_admin': False,
+                     'is_manager': False,
+                     'lastname': 'toto',
+                     'organization': None,
+                     'organization_id': None
+                     }.items():
+            self.assertIn(k, result)
+            self.assertEqual(result[k], v)
 
     def test_delete_user(self):
-        params = {
-            "email": 'bill@example.fr',
-            "password": 'super-secret-password'
-        }
-        response = self.client.post(
-            '/api/auth/signup',
-            json=params,
-            content_type="application/json"
-
-        )
-        self.assertEqual(response.status_code, 200)
-        token = self.authenticate('bill@example.fr', 'super-secret-password')
-        result = json.loads(response.data.decode('utf-8'))
-        url = 'api/users/%d' % int(result["id"])
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/users/1'
         response = self.delete(url, token)
         self.assertEqual(response.status_code, 204)
         self.assertIsNone(User.query.filter_by(email='bill@example.fr').first())
