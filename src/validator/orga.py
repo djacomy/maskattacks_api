@@ -1,6 +1,6 @@
 import constant
 
-from serializer.orga import (AddressSerializer, OrganisationSerializer, TransporterSerializer,
+from serializer.orga import (AddressSerializer, UserSerializer, OrganisationSerializer, TransporterSerializer,
                              OtherSerializer, ManufactorSerializer, CapacitySerializer, RangeSerializer)
 
 from repository import reference as ref_repository
@@ -28,11 +28,16 @@ def _check_params(params, resource_fields, model_name, required_fields=None, ref
         if params.get(field) is None and field in req_fields:
             errors.append(get_error_messages(constant.FIELD_REQUIRED, field, model_name))
 
-        if ref_fields and field in ref_fields:
-                value = _check_ref(params.get(field), field, errors)
-                obj[field] = value
-        else:
+        if not ref_fields or field not in ref_fields:
+            # no ref variables ou field not belong to ref variables
             obj[field] = params.get(field, None)
+            continue
+
+        obj[field] = params.get(field, None)
+        if params.get(field) is not None:
+            value = _check_ref(params.get(field), field, errors)
+            obj[field] = value
+
     return obj, errors
 
 
@@ -44,28 +49,46 @@ def check_organisation(params):
                                 required_fields=OrganisationSerializer.required,
                                 ref_fields= ref_fields)
 
-    if obj["role"] is None:
-        return obj, errors
-
     roles = ref_repository.get_roles()
     check_data = {"tra": "transporter",
                   "cus": "customer",
                   "pro": "provider",
                   "man": "manufactor"}
-    check_func = {"tra": check_transporter,
+    check_func = {"user": check_user,
+                  "address": check_address,
+                  "tra": check_transporter,
                   "cus": check_customer,
                   "pro": check_provider,
                   "man": check_manufactor}
+
+    # Mandatory fields
+    for field in ["user", "address"]:
+        if params.get(field) is None:
+            errors.append(get_error_messages(constant.FIELD_REQUIRED, field, "organisation"))
+            continue
+
+        obj_data, errors_data = check_func[field](params.get(field))
+        obj[field] = obj_data
+        errors.extend(errors_data)
+
+    if obj["role"] is None:
+        return obj, errors
+
+    # conditional field
     data_code = roles[obj["role"]]
     if params.get(check_data[data_code]) is None:
         errors.append(get_error_messages(constant.FIELD_REQUIRED, check_data[data_code], "organisation"))
         return obj, errors
 
     obj_data, errors_data = check_func[data_code](params.get(check_data[data_code]))
-
     obj[check_data[data_code]] = obj_data
-    errors += errors_data
+    errors.extend(errors_data)
     return obj, errors
+
+
+def check_user(params):
+    return _check_params(params, UserSerializer.resource_fields, "user",
+                         required_fields=UserSerializer.required)
 
 
 def check_address(params):

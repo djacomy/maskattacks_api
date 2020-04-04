@@ -101,6 +101,18 @@ class OrganisationSerializer:
     required = ["name", 'role']
 
 @swagger.model
+class UserSerializer:
+    resource_fields = {
+        "email":fields.String,
+        "firstname" :fields.String,
+        "lastname": fields.String,
+        "password": fields.String,
+    }
+    required = ["email", "firstname", "lastname", "password"]
+
+
+@swagger.model
+@swagger.nested(user=UserSerializer.__name__)
 @swagger.nested(stocks=AddressSerializer.__name__)
 @swagger.nested(provider=OtherSerializer.__name__)
 @swagger.nested(customer=OtherSerializer.__name__)
@@ -113,11 +125,12 @@ class OrganisationResponseSerializer:
         'role': fields.String,
         'status': fields.String,
         'availability': fields.String,
-        'address': fields.Nested(AddressSerializer.resource_fields),
+        'user': fields.Nested(UserSerializer.resource_fields, allow_null=False),
+        'address': fields.Nested(AddressSerializer.resource_fields, allow_null=False),
         'provider': fields.Nested(OtherSerializer.resource_fields),
         'customer': fields.Nested(OtherSerializer.resource_fields),
         'transporter': fields.Nested(TransporterSerializer.resource_fields),
         'manufactor': fields.Nested(ManufactorSerializer.resource_fields),
     }
-    required = ["name", 'role']
+    required = ["name", 'role', 'status']
 

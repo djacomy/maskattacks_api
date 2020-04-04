@@ -5,6 +5,7 @@ from test.utils.mixins import BaseTest
 
 
 class TestOrga(BaseTest):
+    maxDiff = None
     fixtures = ["users.json", "refs.json"]
 
     def test_chech_address(self):
@@ -47,6 +48,17 @@ class TestOrga(BaseTest):
             "role": "man",
             "status": "running",
             "availability": "midtime",
+            "user": {
+                "email": "jim@example.fr",
+                "firstname": "Jimmy",
+                "lastname": "Le Duc",
+                "password": "jimmyleduc"
+            },
+            "address": {
+                "street": "30 rue du paradis",
+                "zipcode": "34344",
+                "city": "le paradis",
+             },
             "manufactor": {
                 "type": "Couturier",
                 "capacity": "Faible",
@@ -61,7 +73,19 @@ class TestOrga(BaseTest):
             "role": 7,
             "status": 1,
             "availability": 4,
-            'address': None,
+            "user": {
+                "email": "jim@example.fr",
+                "firstname": "Jimmy",
+                "lastname": "Le Duc",
+                "password": "jimmyleduc"
+            },
+            "address": {
+                "street": "30 rue du paradis",
+                "zipcode": "34344",
+                "city": "le paradis",
+                "lon": None,
+                "lat": None
+            },
             'customer': None,
             "manufactor": {'type': 11,
                            'capacity': 13,
@@ -93,8 +117,69 @@ class TestOrga(BaseTest):
             'transporter': None
         })
         self.assertEqual(errors,
+                         [{'code': 'FIELD_REQUIRED', 'message': 'user of organisation is required'},
+                          {'code': 'FIELD_REQUIRED', 'message': 'address of organisation is required'},
+                          {'code': 'FIELD_REQUIRED', 'message': 'manufactor of organisation is required'}])
+
+    def test_check_orga_with_no_role(self):
+        params = {
+            "name": "Hôpital du Paradis",
+            "status": "running",
+            "availability": "midtime",
+            "user": {
+                "email": "jim@example.fr",
+                "firstname": "Jimmy",
+                "lastname": "Le Duc",
+                "password": "jimmyleduc"
+            },
+            "address": {
+                "street": "30 rue du paradis",
+                "zipcode": "34344",
+                "city": "le paradis",
+            },
+            "manufactor": {
+                "type": "Couturier",
+                "capacity": "Faible",
+                "skill_level": "Confirmé",
+                "quality_need": "Qualité Max",
+                "contract_type": "Bénévole"
+            }
+        }
+        obj, errors = check_organisation(params)
+        self.assertEqual(obj, {
+            "name": "Hôpital du Paradis",
+            "role": None,
+            "status": 1,
+            "availability": 4,
+            "user": {
+                "email": "jim@example.fr",
+                "firstname": "Jimmy",
+                "lastname": "Le Duc",
+                "password": "jimmyleduc"
+            },
+            "address": {
+                "street": "30 rue du paradis",
+                "zipcode": "34344",
+                "city": "le paradis",
+                "lon": None,
+                "lat": None
+            },
+            'customer': None,
+            "manufactor": {
+                "type": "Couturier",
+                "capacity": "Faible",
+                "skill_level": "Confirmé",
+                "quality_need": "Qualité Max",
+                "contract_type": "Bénévole"
+            },
+            'provider': None,
+            'transporter': None
+        })
+        self.assertEqual(errors,
                          [{'code': 'FIELD_REQUIRED',
-                           'message': 'manufactor of organisation is required'}])
+                           'message': 'role of organization is required'}
+                          ])
+
 
 
 
