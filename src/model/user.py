@@ -22,12 +22,11 @@ class User(db.Model, BaseModel):
     organization = db.relationship("Organisation", back_populates="users")
 
     def __init__(self, email=None, password=None, **kwargs):
+        super(User, self).__init__(email=email, password=password, **kwargs)
         if email:
             self.email = email.lower()
         if password:
             self.set_password(password)
-        for k, v in kwargs.items():
-            setattr(self, k, v)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

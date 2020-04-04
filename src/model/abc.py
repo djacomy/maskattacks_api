@@ -34,6 +34,10 @@ class BaseModel():
     print_filter = ()
     to_json_filter = ()
 
+    def __init__(self,  **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     def __repr__(self):
         """ Define a base way to print models
             Columns inside `print_filter` are excluded """

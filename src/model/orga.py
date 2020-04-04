@@ -100,7 +100,7 @@ class Organisation(db.Model, BaseModel):
     name = db.Column(db.String(30))
     role = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
     status = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
-    avalability = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
+    availability = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
 
 
     address_id = db.Column(db.Integer, db.ForeignKey('orga_address.id'))
@@ -110,8 +110,7 @@ class Organisation(db.Model, BaseModel):
     object_type = db.Column(db.Unicode(255))
     # This is used to point to the primary key of the linked row.
     object_id = db.Column(db.Integer)
-    object = generic_relationship(object_type, object_id)
-
+    data = generic_relationship(object_type, object_id)
 
     users = db.relationship("User", back_populates="organization")
 

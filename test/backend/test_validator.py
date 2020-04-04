@@ -5,7 +5,6 @@ from test.utils.mixins import BaseTest
 
 
 class TestOrga(BaseTest):
-    maxDiff = None
     fixtures = ["users.json", "refs.json"]
 
     def test_chech_address(self):

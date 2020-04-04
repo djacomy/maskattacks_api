@@ -21,7 +21,6 @@ def create_user(params):
     :return:
     """
     user = User(**params)
-    user.set_password(params.get("password"))
     user.save()
     return user
 
