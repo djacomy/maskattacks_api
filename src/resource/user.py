@@ -1,5 +1,4 @@
 import datetime
-import json
 
 from flask import request, jsonify, g
 from flask_jwt_extended import create_access_token, jwt_required
@@ -9,9 +8,7 @@ from flask_restful_swagger import swagger
 from serializer.user import (SignupRequestSerializer, SignupResponseSerializer,
                              SigninRequestSerializer, SigninResponseSerializer)
 
-from model.abc import db
-from model import User
-from util import parse_params
+from repository import user as user_repository
 
 
 from sqlalchemy.orm.exc import NoResultFound
@@ -42,11 +39,8 @@ class SignupApi(Resource):
         ])
     def post(self):
         body = request.get_json()
-        user = User(**body)
-        user.set_password(body.get("password"))
-        user.save()
-        id = user.id
-        return {'id': str(id)}, 200
+        user = user_repository.create_user(body)
+        return {'id': str(user.id)}, 200
 
 
 class LoginApi(Resource):
@@ -83,7 +77,7 @@ class LoginApi(Resource):
         ])
     def post(self):
         body = request.get_json()
-        user = User.query.filter_by(email=body.get('email')).first()
+        user = user_repository.get_user_by_email(body.get('email'))
         if not user:
             return {"error": "Email not found"}, 404
 
@@ -100,19 +94,19 @@ class UserListAPI(Resource):
 
     @jwt_required
     def get(self):
-        return jsonify(data=[user.json for user in User.query])
+        return jsonify(data=user_repository.find_users())
 
 
 class UserAPI(Resource):
     method_decorators = [jwt_required]
 
     def get(self, id):
-        user = User.query.get(id)
+        user = user_repository.get_user_by_id(id)
         return user.json, 200
 
     def put(self, id):
         body = request.get_json()
-        user = User.query.get(id)
+        user = user_repository.get_user_by_id(id)
 
         for k, v in body.items():
             if v == getattr(user, k):
@@ -123,7 +117,7 @@ class UserAPI(Resource):
 
     def delete(self, id):
         try:
-            user = User.query.get(id)
+            user = user_repository.get_user_by_id(id)
             user.remove()
             return {}, 204
 

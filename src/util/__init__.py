@@ -1,1 +1,1 @@
-from .parse_params import parse_params
+from .validator import parse_params

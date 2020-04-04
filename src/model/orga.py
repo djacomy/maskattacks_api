@@ -67,6 +67,13 @@ class Reference(db.Model, BaseModel):
                 "libelle": item.libelle})
         return result
 
+    @classmethod
+    def get_reference_codes(cls):
+        result = defaultdict(list)
+        for item in cls.query.all():
+            result[ReferenceType.get_name(item.type)].append(item.code)
+        return result
+
     def __init__(self, type, code, libelle):
         self.type = type
         self.code = code
