@@ -5,6 +5,7 @@ from flask_restful_swagger import swagger
 
 from config import BASE_SERVER_PATH
 from resource.user import SignupApi, LoginApi
+from resource.orga import OrganisationsApi
 from resource.product import RequestApi, KitsApi, KitApi, ProtectionsApi, ProtectionApi, BatchesApi, BatchApi
 from resource.stock import StocksApi, StockApi
 from resource.user import UserAPI, UserListAPI
@@ -20,6 +21,8 @@ api = swagger.docs(Api(api_blueprint), apiVersion='0.1',
 
 api.add_resource(SignupApi, '/auth/signup')
 api.add_resource(LoginApi, '/auth/login')
+
+api.add_resource(OrganisationsApi, '/organization')
 
 api.add_resource(RequestApi, '/requests')
 

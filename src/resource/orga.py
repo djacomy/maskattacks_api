@@ -28,13 +28,13 @@ class ReferencesApi(Resource):
         return ref_repository.get_reference_codes(), 200
 
 
-class OrganisationApi(Resource):
+class OrganisationsApi(Resource):
     method_decorators = [jwt_required]
 
     @swagger.operation(
         notes='Organisation management',
         responseClass=OrganisationSerializer.__name__,
-        nickname='organisation',
+        nickname='organisations',
         parameters=[
             {
                 "name": "body",
@@ -57,7 +57,8 @@ class OrganisationApi(Resource):
         {'name': 'role', 'type': str, 'required': True},
         {'name': 'status', 'type': str, 'required': True},
         {'name': 'availability', 'type': str},
-        {'name': 'address', 'type': dict},
+        {'name': 'user', 'type': dict, 'required': True},
+        {'name': 'address', 'type': dict, 'required': True},
         {'name': 'provider', 'type': dict},
         {'name': 'customer', 'type': dict},
         {'name': 'manufactor', 'type': dict},
@@ -65,21 +66,8 @@ class OrganisationApi(Resource):
     )
     def post(self, params):
         obj, errors = orga_validator.check_organisation(params)
-
-        for field in {"address": orga_validator.check_address,
-                      "provider": orga_validator.check_provider,
-                      "customer": orga_validator.check_customer,
-                      "manufactor": orga_validator.check_manufactor,
-                      "transporter": orga_validator.check_transporter}.items():
-            if params.get(field) is None:
-                continue
-
-            nested_obj, nested_errors = orga_validator.check_address(params.get("address"))
-            obj[field] = nested_obj
-            errors += nested_errors
-
         if errors:
             return {"errors": errors}, 400
-
-        return obj, 200
+        dbobj = orga_repository.create_organization(obj)
+        return {"id":  dbobj.id}, 200
 
