@@ -3,7 +3,7 @@ from flask_restful import Resource
 from util.validator import parse_params
 from flask_restful_swagger import swagger
 
-from serializer.orga import OrganisationSerializer, ReferencesSerializer
+from serializer.orga import OrganisationSerializer, ReferencesSerializer, OrganisationUpdateSerializer
 
 from repository import reference as ref_repository, orga as orga_repository
 from validator import orga as orga_validator
@@ -92,6 +92,53 @@ class OrganisationApi(Resource):
             return {"errors": [{"code": "UNKNOWN_RESOURCE",
                                 "message": "unknown organisation"}]}, 404
         return dbobj.json, 200
+
+    @swagger.operation(
+        notes="Update organisation's status",
+        nickname='organisation',
+        parameters=[
+            {
+                "name": "body",
+                "description": "Organization update parameter",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": OrganisationUpdateSerializer.__name__,
+                "paramType": "body"
+            }
+        ],
+        responseMessages=[
+            {
+                "code": 204,
+                "message": "Update status succesfully."
+            },
+            {
+                "code": 400,
+                "message": "Bad status."
+            },
+            {
+                "code": 404,
+                "message": "Unknown ressource."
+            }
+
+        ])
+    @parse_params(
+        {'name': 'status', 'type': str, 'required': True},
+    )
+    def put(self, vid, params):
+        dbobj = orga_repository.get_organisation(vid)
+        if not dbobj:
+            return {"errors": [{"code": "UNKNOWN_RESOURCE",
+                                "message": "unknown organisation"}]}, 404
+
+        statusobj = ref_repository.get_reference_from_code_or_libelle(params.get('status'))
+        if not statusobj:
+            return {"errors": [{"code": "BAD_STATUS",
+                                "message": "bad status"}]}, 400
+
+        dbobj.status_obj = statusobj
+        dbobj.save()
+
+        return {}, 204
 
 
 

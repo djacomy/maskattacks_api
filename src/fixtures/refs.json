@@ -301,6 +301,12 @@
         "code": "entc",
         "type": 13,
         "libelle": "Entreprise Classe C"
+      },
+      {
+        "id": 51,
+        "code": "rejected",
+        "type": 14,
+        "libelle": "Rejet\u00e9"
       }
     ]
   }

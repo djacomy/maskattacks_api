@@ -1,9 +1,11 @@
 from repository.orga import create_organization
+from repository.orga import get_organisation
 from test.utils.mixins import BaseTest, BaseAuthMixin
 
 
 class TestOrga(BaseTest, BaseAuthMixin):
     fixtures = ["users.json", "refs.json"]
+
 
     def test_get_references(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
@@ -24,6 +26,10 @@ class TestOrga(BaseTest, BaseAuthMixin):
                                  {
                                      "code": "suspend",
                                      "libelle": "Paused"
+                                 },
+                                 {
+                                     "code": "rejected",
+                                     "libelle": "Rejeté"
                                  }
                              ],
                              "orga_availability": [
@@ -347,3 +353,41 @@ class TestOrga(BaseTest, BaseAuthMixin):
                   }
         self.assertEqual(response.json, output)
 
+    def test_update_provider_status(self):
+        params = {
+            "vid": 2,
+            "name": "Entreprise de textile",
+            "role": 10,
+            "status": 1,
+            "availability": 4,
+            "user": {
+                "email": "rom@example.fr",
+                "firstname": "Romain",
+                "lastname": "Le Tartempion",
+                "password": "romainletartampion"
+            },
+            "address": {
+                "street": "30 rue des visiteurs",
+                "zipcode": "54344",
+                "city": "covid-19",
+                "lon": None,
+                "lat": None
+            },
+            'customer': None,
+            "manufactor": None,
+            'provider': {
+                "type": 33,
+                "subtype": 36,
+            },
+            'transporter': None
+        }
+        create_organization(params)
+
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/organization/1'
+        response = self.put(url, token, {"status": "rejected"})
+
+        self.assertEqual(response.status_code, 204)
+
+        obj = get_organisation(1)
+        self.assertEqual(obj.status_obj.code, "rejected")

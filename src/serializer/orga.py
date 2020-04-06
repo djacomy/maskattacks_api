@@ -101,6 +101,14 @@ class OrganisationSerializer:
     }
     required = ["vid", "name", 'role']
 
+
+@swagger.model
+class OrganisationUpdateSerializer:
+    resource_fields = {
+        'status': fields.String,
+    }
+    required = ['status']
+
 @swagger.model
 class UserSerializer:
     resource_fields = {

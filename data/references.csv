@@ -2,6 +2,7 @@ reference,code,libelle
 orga_status,running,En Cours de Traitement
 orga_status,active,Actif dans le circuit
 orga_status,suspend,Paused
+orga_status,rejected,Rejeté
 orga_availability,midtime,Mi-Temps
 orga_availability,fulltime,Plein Temps
 orga_availability,na,Non Applicable

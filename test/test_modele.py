@@ -13,7 +13,7 @@ class TestReferences(BaseTest):
     def test_import_references(self):
         import_references()
 
-        self.assertEqual(50, Reference.query.count())
+        self.assertEqual(51, Reference.query.count())
 
         id1 = Reference.find_id_by_type_and_code(ReferenceType.capacity_type, "batch30")
         id2 = Reference.find_id_by_type_and_code(ReferenceType.capacity_type, "lots 30")
@@ -21,7 +21,7 @@ class TestReferences(BaseTest):
 
         result = Reference.get_references()
         self.assertEqual({k: [o["code"] for o in list_obj] for k, list_obj in result.items()},
-                         {'orga_status': ['running', 'active', 'suspend'],
+                         {'orga_status': ['running', 'active', 'suspend', 'rejected'],
                           'orga_availability': ['midtime', 'fulltime', 'na'],
                           'orga_role': ['man', 'tra', 'cus', 'pro'],
                           'manufactor_type': ['cou', 'print3d'],
