@@ -5,6 +5,245 @@ from test.utils.mixins import BaseTest, BaseAuthMixin
 class TestOrga(BaseTest, BaseAuthMixin):
     fixtures = ["users.json", "refs.json"]
 
+    def test_get_references(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/references'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json,
+                         {
+                             "orga_status": [
+                                 {
+                                     "code": "running",
+                                     "libelle": "En Cours de Traitement"
+                                 },
+                                 {
+                                     "code": "active",
+                                     "libelle": "Actif dans le circuit"
+                                 },
+                                 {
+                                     "code": "suspend",
+                                     "libelle": "Paused"
+                                 }
+                             ],
+                             "orga_availability": [
+                                 {
+                                     "code": "midtime",
+                                     "libelle": "Mi-Temps"
+                                 },
+                                 {
+                                     "code": "fulltime",
+                                     "libelle": "Plein Temps"
+                                 },
+                                 {
+                                     "code": "na",
+                                     "libelle": "Non Applicable"
+                                 }
+                             ],
+                             "orga_role": [
+                                 {
+                                     "code": "man",
+                                     "libelle": "Manufact"
+                                 },
+                                 {
+                                     "code": "tra",
+                                     "libelle": "Transport"
+                                 },
+                                 {
+                                     "code": "cus",
+                                     "libelle": "Customer"
+                                 },
+                                 {
+                                     "code": "pro",
+                                     "libelle": "Provider"
+                                 }
+                             ],
+                             "manufactor_type": [
+                                 {
+                                     "code": "cou",
+                                     "libelle": "Couturier"
+                                 },
+                                 {
+                                     "code": "print3d",
+                                     "libelle": "Impresseur3D"
+                                 }
+                             ],
+                             "manufactor_capacity": [
+                                 {
+                                     "code": "low",
+                                     "libelle": "Faible"
+                                 },
+                                 {
+                                     "code": "medium",
+                                     "libelle": "Moyenne"
+                                 }
+                             ],
+                             "skill_level": [
+                                 {
+                                     "code": "pro",
+                                     "libelle": "Professionnel"
+                                 },
+                                 {
+                                     "code": "semipro",
+                                     "libelle": "Confirm\u00e9"
+                                 },
+                                 {
+                                     "code": "noexp",
+                                     "libelle": "Amateur"
+                                 }
+                             ],
+                             "quality_need": [
+                                 {
+                                     "code": "max",
+                                     "libelle": "Qualit\u00e9 Max"
+                                 },
+                                 {
+                                     "code": "good",
+                                     "libelle": "Qualit\u00e9 Bonne"
+                                 },
+                                 {
+                                     "code": "noexp",
+                                     "libelle": "Qualit\u00e9 Amateur"
+                                 },
+                                 {
+                                     "code": "na",
+                                     "libelle": "Non Applicable"
+                                 }
+                             ],
+                             "contract_type": [
+                                 {
+                                     "code": "volonteer",
+                                     "libelle": "B\u00e9n\u00e9vole"
+                                 },
+                                 {
+                                     "code": "sharedprice",
+                                     "libelle": "Montant revers\u00e9"
+                                 },
+                                 {
+                                     "code": "sharedprime",
+                                     "libelle": "Part revers\u00e9e"
+                                 }
+                             ],
+                             "transporter_type": [
+                                 {
+                                     "code": "tran",
+                                     "libelle": "Transporter"
+                                 }
+                             ],
+                             "capacity_value": [
+                                 {
+                                     "code": "truck",
+                                     "libelle": "Camionnette"
+                                 },
+                                 {
+                                     "code": "batch30",
+                                     "libelle": "30 lots"
+                                 }
+                             ],
+                             "capacity_type": [
+                                 {
+                                     "code": "class",
+                                     "libelle": "class"
+                                 },
+                                 {
+                                     "code": "volume",
+                                     "libelle": "volume"
+                                 },
+                                 {
+                                     "code": "units",
+                                     "libelle": "units"
+                                 }
+                             ],
+                             "range_type": [
+                                 {
+                                     "code": "km",
+                                     "libelle": "km"
+                                 },
+                                 {
+                                     "code": "dept",
+                                     "libelle": "departement"
+                                 }
+                             ],
+                             "provider_type": [
+                                 {
+                                     "code": "fm",
+                                     "libelle": "Fournisseur mat\u00e9riaux"
+                                 },
+                                 {
+                                     "code": "pre",
+                                     "libelle": "Pressing"
+                                 },
+                                 {
+                                     "code": "ent",
+                                     "libelle": "Entrep\u00f4t"
+                                 }
+                             ],
+                             "provider_subtype": [
+                                 {
+                                     "code": "fta",
+                                     "libelle": "Fournisseur Textile Classe A"
+                                 },
+                                 {
+                                     "code": "ftb",
+                                     "libelle": "Fournisseur Textile Classe B"
+                                 },
+                                 {
+                                     "code": "ft3d",
+                                     "libelle": "Fournisseur Impression 3D"
+                                 }
+                             ],
+                             "customer_type": [
+                                 {
+                                     "code": "med",
+                                     "libelle": "M\u00e9dical"
+                                 },
+                                 {
+                                     "code": "pres",
+                                     "libelle": "Pressing"
+                                 },
+                                 {
+                                     "code": "ent",
+                                     "libelle": "Entrep\u00f4t"
+                                 },
+                                 {
+                                     "code": "ins",
+                                     "libelle": "Institution"
+                                 },
+                                 {
+                                     "code": "com",
+                                     "libelle": "Commerce"
+                                 },
+                                 {
+                                     "code": "gsu",
+                                     "libelle": "Grande Surface"
+                                 }
+                             ],
+                             "customer_subtype": [
+                                 {
+                                     "code": "hop",
+                                     "libelle": "Hopital"
+                                 },
+                                 {
+                                     "code": "cli",
+                                     "libelle": "Clinique"
+                                 },
+                                 {
+                                     "code": "soilib",
+                                     "libelle": "Soignant Lib\u00e9rale"
+                                 },
+                                 {
+                                     "code": "enta",
+                                     "libelle": "Entreprise Classe A"
+                                 },
+                                 {
+                                     "code": "entb", "libelle": "Entreprise Classe B"
+                                 },
+                                 {
+                                     "code": "entc", "libelle": "Entreprise Classe C"
+                                 }
+                             ]
+                         })
+
     def test_create_orga(self):
         params = {
             "vid": 1,
@@ -79,15 +318,16 @@ class TestOrga(BaseTest, BaseAuthMixin):
             "manufactor": None,
             'provider': {
                 "type": 33,
-                "subtype": 35,
+                "subtype": 36,
             },
             'transporter': None
         }
         create_organization(params)
 
         token = self.authenticate('joe@example.fr', 'super-secret-password')
-        url = 'api/organization/'
-        response = self.post(url, token, params)
+        url = 'api/organization/1'
+        response = self.get(url, token)
+
         self.assertEqual(response.status_code, 200)
         output = {"id": 1,
                   "vid": 2,

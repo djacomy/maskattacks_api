@@ -20,7 +20,7 @@ def get_roles():
 
 def get_references():
     result = defaultdict(list)
-    for item in ReferenceType.query.all():
+    for item in Reference.query.all():
         result[ReferenceType.get_name(item.type)].append({
             "code": item.code,
             "libelle": item.libelle})

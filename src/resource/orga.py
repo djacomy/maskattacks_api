@@ -9,7 +9,6 @@ from repository import reference as ref_repository, orga as orga_repository
 from validator import orga as orga_validator
 
 
-
 class ReferencesApi(Resource):
     method_decorators = [jwt_required]
 
@@ -25,7 +24,7 @@ class ReferencesApi(Resource):
 
         ])
     def get(self):
-        return ref_repository.get_reference_codes(), 200
+        return ref_repository.get_references(), 200
 
 
 class OrganisationsApi(Resource):
@@ -53,6 +52,7 @@ class OrganisationsApi(Resource):
 
         ])
     @parse_params(
+        {'name': 'vid', 'type': str, 'required': True},
         {'name': 'name', 'type': str, 'required': True},
         {'name': 'role', 'type': str, 'required': True},
         {'name': 'status', 'type': str, 'required': True},
@@ -86,18 +86,6 @@ class OrganisationApi(Resource):
             }
 
         ])
-    @parse_params(
-        {'name': 'name', 'type': str, 'required': True},
-        {'name': 'role', 'type': str, 'required': True},
-        {'name': 'status', 'type': str, 'required': True},
-        {'name': 'availability', 'type': str},
-        {'name': 'user', 'type': dict, 'required': True},
-        {'name': 'address', 'type': dict, 'required': True},
-        {'name': 'provider', 'type': dict},
-        {'name': 'customer', 'type': dict},
-        {'name': 'manufactor', 'type': dict},
-        {'name': 'transporter', 'type': dict}
-    )
     def get(self, vid):
         dbobj = orga_repository.get_organisation(vid)
         if not dbobj:

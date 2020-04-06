@@ -99,7 +99,7 @@ class OrganisationSerializer:
         'transporter': fields.Nested(TransporterSerializer.resource_fields),
         'manufactor': fields.Nested(ManufactorSerializer.resource_fields),
     }
-    required = ["name", 'role']
+    required = ["vid", "name", 'role']
 
 @swagger.model
 class UserSerializer:
@@ -134,5 +134,5 @@ class OrganisationResponseSerializer:
         'transporter': fields.Nested(TransporterSerializer.resource_fields),
         'manufactor': fields.Nested(ManufactorSerializer.resource_fields),
     }
-    required = ["name", 'role', 'status']
+    required = [ "name", 'role', 'status']
 
