@@ -72,3 +72,11 @@ def create_organization(params):
 
     orga.save()
     return orga
+
+
+def get_organisation(vid):
+    return Organisation.query.filter(vid == vid).first()
+
+
+def get_provider(id):
+    return Provider.query.filter(id == id)

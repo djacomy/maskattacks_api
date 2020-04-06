@@ -27,7 +27,7 @@ class MetaBaseModel(db.Model.__class__):
         return alias
 
 
-class BaseModel():
+class BaseModel:
     """ Generalize __init__, __repr__ and to_json
         Based on the models columns """
 
@@ -53,10 +53,12 @@ class BaseModel():
             Columns inside `to_json_filter` are excluded """
 
         def get_value(value):
+            if isinstance(value, BaseModel):
+                return value.json
             if isinstance(value, datetime.date):
                 return value.isoformat()
             if isinstance(value, enum.Enum):
-                return  value.value
+                return value.value
             return value
 
         return {

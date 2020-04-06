@@ -1,0 +1,12 @@
+[
+  {
+    "model": "model.Provider",
+    "records": [
+      {
+        "id":1,
+        "type": 33,
+        "subtype": 36
+      }
+    ]
+  }
+]

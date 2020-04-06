@@ -10,6 +10,9 @@ from server import server
 from model.abc import db
 
 server.config['TESTING'] = True
+server.config['SQLALCHEMY_BINDS'] = {
+    "main": config.DB_URI
+}
 
 
 class BaseTest(unittest.TestCase, FixturesMixin):

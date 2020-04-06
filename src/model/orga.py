@@ -83,6 +83,8 @@ class Reference(db.Model, BaseModel):
 class Address(db.Model, BaseModel):
     __tablename__ = 'orga_address'
 
+    to_json_filter = ('id', "organization", )
+
     id = db.Column(db.Integer, primary_key=True)
     street = db.Column(db.String(50))
     zipcode = db.Column(db.String(10))
@@ -100,20 +102,35 @@ class Organisation(db.Model, BaseModel):
     vid = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(30))
     role = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
+    role_obj = db.relationship(Reference, foreign_keys=[role])
     status = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
+    status_obj = db.relationship(Reference, foreign_keys=[status])
     availability = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
-
+    availability_obj = db.relationship(Reference, foreign_keys=[availability])
 
     address_id = db.Column(db.Integer, db.ForeignKey('orga_address.id'))
-    address = db.relationship("Address", back_populates="organization")
+    address = db.relationship(Address, back_populates="organization")
 
    # This is used to discriminate between the linked tables.
     object_type = db.Column(db.Unicode(255))
     # This is used to point to the primary key of the linked row.
     object_id = db.Column(db.Integer)
+
     data = generic_relationship(object_type, object_id)
 
     users = db.relationship("User", back_populates="organization")
+
+    @property
+    def json(self):
+        return {
+            "id": self.id,
+            "vid": self.vid,
+            "role":  self.role_obj.code,
+            'status': self.status_obj.code,
+            'availability': self.availability_obj.code,
+            "address": self.address.json,
+            "data": self.data.json
+        }
 
 
 class Manufacturor(db.Model, BaseModel):
@@ -126,6 +143,20 @@ class Manufacturor(db.Model, BaseModel):
     quality_need = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
     contract_type = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
 
+    type_obj = db.relationship(Reference, foreign_keys=[type])
+    capacity_obj = db.relationship(Reference, foreign_keys=[capacity])
+    skill_level_obj = db.relationship(Reference, foreign_keys=[skill_level])
+    contract_type_obj = db.relationship(Reference, foreign_keys=[contract_type])
+
+    @property
+    def json(self):
+        return {
+            "type": self.type_obj.code,
+            "capacity":  self.capacity_obj.code,
+            'skill_level': self.skill_level_obj.code,
+            'contract_type': self.contract_type_obj.code,
+        }
+
 
 class Transporter(db.Model, BaseModel):
     __tablename__ = 'orga_transporter'
@@ -137,13 +168,43 @@ class Transporter(db.Model, BaseModel):
     range_value = db.Column(db.Integer)
     range_type = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
 
+    type_obj = db.relationship(Reference, foreign_keys=[type])
+    capacity_type_obj = db.relationship(Reference, foreign_keys=[capacity_type])
+    capacity_value_obj = db.relationship(Reference, foreign_keys=[capacity_value])
+    range_type_obj = db.relationship(Reference, foreign_keys=[range_type])
+
+    @property
+    def json(self):
+        return {
+            "type": self.type_obj.code,
+            "capacity":{
+                "type": self.capacity_type.code,
+                "value": self.capacity_type.value,
+            } ,
+            'range': {
+                "type": self.range_type.code,
+                "value": self.range_value,
+            }
+        }
+
 
 class Provider(db.Model, BaseModel):
     __tablename__ = 'orga_provider'
 
+    to_json_filter =  ('type', 'subtype', )
+
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
     subtype = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
+    type_obj = db.relationship(Reference, foreign_keys=[type])
+    subtype_obj = db.relationship(Reference, foreign_keys=[subtype])
+
+    @property
+    def json(self):
+        return {
+            "type": self.type_obj.code,
+            "subtype": self.subtype_obj.code,
+        }
 
 
 class Customer(db.Model, BaseModel):
@@ -152,3 +213,12 @@ class Customer(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
     subtype = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
+    type_obj = db.relationship(Reference, foreign_keys=[type])
+    subtype_obj = db.relationship(Reference, foreign_keys=[subtype])
+
+    @property
+    def json(self):
+        return {
+            "type": self.type_obj.code,
+            "subtype": self.subtype_obj.code,
+        }

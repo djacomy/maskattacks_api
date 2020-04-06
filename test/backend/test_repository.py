@@ -1,11 +1,26 @@
 # -*- coding: utf-8 -*-
 
-from repository.orga import create_organization
+from repository.orga import create_organization, get_provider
 from test.utils.mixins import BaseTest
 
 
+def dump(obj):
+    for k, v in obj.items():
+        if isinstance(v, dict):
+            dump(v)
+        else:
+            try:
+                print(k, v)
+            except UnicodeDecodeError:
+                print(k, v.decode('iso-8859-1'))
+
+
 class TestOrga(BaseTest):
-    fixtures = ["users.json", "refs.json"]
+    fixtures = ["refs.json",  "users.json", "orga.json"]
+
+    def test_get_provider(self):
+        obj = get_provider(1).first()
+        self.assertEqual(obj.json, {'type': 'fm', 'subtype': 'fta'})
 
     def test_create_manufactor_orga(self):
         params = {
