@@ -3,7 +3,6 @@
     "model": "model.User",
     "records": [
       {
-        "id": 1,
         "email": "joe@example.fr",
         "firstname": null,
         "lastname": null,

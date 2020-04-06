@@ -8,6 +8,8 @@ from model.abc import db
 from app import create_app
 
 app = create_app(config)
+app.config['JWT_SECRET_KEY'] = config.JWT_SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = config.DB_URI
 
 migrate = Migrate(app, db)
 manager = Manager(app)

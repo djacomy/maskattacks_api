@@ -88,6 +88,7 @@ class OtherSerializer:
 @swagger.nested(manufactor=ManufactorSerializer.__name__)
 class OrganisationSerializer:
     resource_fields = {
+        'vid': fields.Integer,
         'name': fields.String,
         'role': fields.String,
         'status': fields.String,
@@ -121,6 +122,7 @@ class UserSerializer:
 class OrganisationResponseSerializer:
     resource_fields = {
         'id': fields.Integer,
+        'vid': fields.Integer,
         'name': fields.String,
         'role': fields.String,
         'status': fields.String,

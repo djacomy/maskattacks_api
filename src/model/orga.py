@@ -97,6 +97,7 @@ class Organisation(db.Model, BaseModel):
     __tablename__ = 'orga_organization'
 
     id = db.Column(db.Integer, primary_key=True)
+    vid = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(30))
     role = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))
     status = db.Column(db.Integer, db.ForeignKey("orga_reference.id"))

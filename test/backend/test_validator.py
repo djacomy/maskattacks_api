@@ -5,6 +5,7 @@ from test.utils.mixins import BaseTest
 
 
 class TestOrga(BaseTest):
+    maxDiff = None
     fixtures = ["users.json", "refs.json"]
 
     def test_chech_address(self):
@@ -43,6 +44,7 @@ class TestOrga(BaseTest):
 
     def test_check_orga_with_provider(self):
         params = {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "role": "man",
             "status": "running",
@@ -68,6 +70,7 @@ class TestOrga(BaseTest):
         }
         obj, errors = check_organisation(params)
         self.assertEqual(obj, {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "role": 7,
             "status": 1,
@@ -98,6 +101,7 @@ class TestOrga(BaseTest):
 
     def test_check_orga_without_provider(self):
         params = {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "role": "man",
             "status": "running",
@@ -105,6 +109,7 @@ class TestOrga(BaseTest):
         }
         obj, errors = check_organisation(params)
         self.assertEqual(obj, {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "role": 7,
             "status": 1,
@@ -122,6 +127,7 @@ class TestOrga(BaseTest):
 
     def test_check_orga_with_no_role(self):
         params = {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "status": "running",
             "availability": "midtime",
@@ -146,6 +152,7 @@ class TestOrga(BaseTest):
         }
         obj, errors = check_organisation(params)
         self.assertEqual(obj, {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "role": None,
             "status": 1,

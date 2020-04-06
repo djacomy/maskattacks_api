@@ -1,11 +1,12 @@
 from test.utils.mixins import BaseTest, BaseAuthMixin
 
 
-class TestAuth(BaseTest, BaseAuthMixin):
+class TestOrga(BaseTest, BaseAuthMixin):
     fixtures = ["users.json", "refs.json"]
 
-    def test_routes(self):
+    def test_create_orga(self):
         params = {
+            "vid": 1,
             "name": "Hôpital du Paradis",
             "role": "man",
             "status": "running",
