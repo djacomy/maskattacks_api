@@ -178,11 +178,11 @@ class Transporter(db.Model, BaseModel):
         return {
             "type": self.type_obj.code,
             "capacity":{
-                "type": self.capacity_type.code,
-                "value": self.capacity_type.value,
+                "type": self.capacity_type_obj.code,
+                "value": self.capacity_type_obj.code,
             } ,
             'range': {
-                "type": self.range_type.code,
+                "type": self.range_type_obj.code,
                 "value": self.range_value,
             }
         }

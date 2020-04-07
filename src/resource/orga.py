@@ -3,7 +3,8 @@ from flask_restful import Resource
 from util.validator import parse_params
 from flask_restful_swagger import swagger
 
-from serializer.orga import OrganisationSerializer, ReferencesSerializer, OrganisationUpdateSerializer
+from serializer.orga import (OrganisationSerializer, OrganisationListSerializer,
+                             ReferencesSerializer, OrganisationUpdateSerializer)
 
 from repository import reference as ref_repository, orga as orga_repository
 from validator import orga as orga_validator
@@ -29,6 +30,27 @@ class ReferencesApi(Resource):
 
 class OrganisationsApi(Resource):
     method_decorators = [jwt_required]
+
+    @swagger.operation(
+        notes='Organisations get',
+        responseClass=OrganisationListSerializer.__name__,
+        nickname='organisation',
+        responseMessages=[
+            {
+                "code": 200,
+                "message": "List of organisations."
+            }
+
+        ])
+    @parse_params(
+        {'name': 'page', 'type': int, "default": 1},
+        {'name': 'size', 'type': int, "default": 10},
+    )
+    def get(self, params):
+        page = params.get("page")
+        size = params.get("size")
+        dbobj = orga_repository.get_organisations(page, size)
+        return {"organizations": dbobj}, 200
 
     @swagger.operation(
         notes='Organisation management',

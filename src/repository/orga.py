@@ -74,9 +74,12 @@ def create_organization(params):
     return orga
 
 
+def get_organisations(page=1, pernumber=10):
+    return [item.json for item in Organisation.query.paginate(page, per_page=pernumber).items]
+
 def get_organisation(vid):
-    return Organisation.query.filter(vid == vid).first()
+    return Organisation.query.filter(Organisation.vid == vid).first()
 
 
 def get_provider(id):
-    return Provider.query.filter(id == id)
+    return Provider.query.filter(Provider.id == id)

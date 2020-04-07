@@ -103,6 +103,14 @@ class OrganisationSerializer:
 
 
 @swagger.model
+@swagger.nested(organizations=OrganisationSerializer.__name__)
+class OrganisationListSerializer:
+    resource_fields = {
+        'organizations': fields.List(fields.Nested(OrganisationSerializer.resource_fields)),
+    }
+
+
+@swagger.model
 class OrganisationUpdateSerializer:
     resource_fields = {
         'status': fields.String,

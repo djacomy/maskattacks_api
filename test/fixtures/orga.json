@@ -1,0 +1,113 @@
+[
+  {
+    "vid": 2,
+    "name": "Entreprise de textile",
+    "role": 10,
+    "status": 1,
+    "availability": 4,
+    "user": {
+      "email": "rom@example.fr",
+      "firstname": "Romain",
+      "lastname": "Le Tartempion",
+      "password": "romainletartampion"
+    },
+    "address": {
+      "street": "30 rue des visiteurs",
+      "zipcode": "54344",
+      "city": "covid-19",
+      "lon": null,
+      "lat": null
+    },
+    "customer": null,
+    "manufactor": null,
+    "provider": {
+      "type": 33,
+      "subtype": 36
+    },
+    "transporter": null
+  },
+  {
+    "vid": 4,
+    "name": "Entreprise de textile 2",
+    "role": 10,
+    "status": 2,
+    "availability": 5,
+    "user": {
+      "email": "text@example.fr",
+      "firstname": "Tati",
+      "lastname": "Danielle",
+      "password": "tatidanielle"
+    },
+    "address": {
+      "street": "30 rue des couturiers",
+      "zipcode": "54345",
+      "city": "covid-19",
+      "lon": null,
+      "lat": null
+    },
+    "customer": null,
+    "manufactor": null,
+    "provider": {
+      "type": 33,
+      "subtype": 37
+    },
+    "transporter": null
+  },
+  {
+    "vid": 3,
+    "name": "Customer 1",
+    "role": 9,
+    "status": 1,
+    "availability": 4,
+    "user": {
+      "email": "customer1@example.fr",
+      "firstname": "Custo",
+      "lastname": "Meur1",
+      "password": "customer1"
+    },
+    "address": {
+      "street": "30 rue clients",
+      "zipcode": "96344",
+      "city": "Chanceux",
+      "lon": null,
+      "lat": null
+    },
+    "customer": {
+      "type": 39,
+      "subtype": 45
+    },
+    "manufactor": null,
+    "provider": null,
+    "transporter": null
+  },
+  {
+    "vid": 5,
+    "name": "Transporter 1",
+    "role": 9,
+    "status": 2,
+    "availability": 5,
+    "user": {
+      "email": "transport1@example.fr",
+      "firstname": "Trans",
+      "lastname": "Porter1",
+      "password": "transporter1"
+    },
+    "address": {
+      "street": "30 rue transporter",
+      "zipcode": "34344",
+      "city": "Sauvequipeut",
+      "lon": null,
+      "lat": null
+    },
+    "customer": null,
+    "manufactor": null,
+    "provider": null,
+    "transporter": {
+      "type": 25,
+      "capacity_type": 28,
+      "capacity_value": 26,
+      "range_type": 31,
+      "range_value": 2
+    }
+  }
+]
