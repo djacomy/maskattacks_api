@@ -1,0 +1,37 @@
+[
+  {
+    "model": "model.Product",
+    "records": [
+      {
+        "created_at": "2020-04-09T08:48:28.012869",
+        "reference": "SAXXXY",
+        "type": 1,
+        "libelle": "Tissus de 50m2"
+      },
+      {
+        "created_at": "2020-04-09T08:48:28.012869",
+        "reference": "SAXXXZ",
+        "type": 1,
+        "libelle": "Tissus de 30m2"
+      },
+      {
+        "created_at": "2020-04-09T08:48:28.012869",
+        "reference": "SAXXYY",
+        "type": 1,
+        "libelle": "Elastique pour mask"
+      },
+      {
+        "created_at": "2020-04-09T08:48:28.012869",
+        "reference": "MEFP2",
+        "type": 3,
+        "libelle": "Mask efp2"
+      },
+      {
+        "created_at": "2020-04-09T08:48:28.012869",
+        "reference": "MTOILE",
+        "type": 3,
+        "libelle": "Mask toile"
+      }
+    ]
+  }
+]

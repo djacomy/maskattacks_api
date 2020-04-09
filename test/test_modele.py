@@ -3,6 +3,7 @@ import json
 
 
 from util.loader import import_references
+from repository import reference as ref_repo
 from model.orga import Reference, ReferenceType
 from test.utils.mixins import BaseTest
 
@@ -15,11 +16,11 @@ class TestReferences(BaseTest):
 
         self.assertEqual(51, Reference.query.count())
 
-        id1 = Reference.find_id_by_type_and_code(ReferenceType.capacity_type, "batch30")
-        id2 = Reference.find_id_by_type_and_code(ReferenceType.capacity_type, "lots 30")
-        self.assertEqual(id1, id2)
+        obj1 = ref_repo.find_reference_by_type_and_code(ReferenceType.capacity_value, "batch30")
+        obj2 = ref_repo.find_reference_by_type_and_libelle(ReferenceType.capacity_value, "30 lots")
+        self.assertEqual(obj1.id, obj2.id)
 
-        result = Reference.get_references()
+        result = ref_repo.get_references()
         self.assertEqual({k: [o["code"] for o in list_obj] for k, list_obj in result.items()},
                          {'orga_status': ['running', 'active', 'suspend', 'rejected'],
                           'orga_availability': ['midtime', 'fulltime', 'na'],

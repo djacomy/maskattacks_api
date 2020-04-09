@@ -1,16 +1,20 @@
 import csv
 import os
+import importlib
 
 from config import DATA_DIR
 from model.orga import ReferenceType, Reference
 
 
-def dump_fixtures():
+def dump_fixtures(model):
     res = []
-    for item in Reference.query.all():
+    module_name, class_name = model.rsplit('.', 1)
+    module = importlib.import_module(module_name)
+    l_model = getattr(module, class_name)
+    for item in l_model.query.all():
         res.append(item.json)
     return [{
-        "table": Reference.__tablename__,
+        "model": model,
         "records": res,
     }]
 
