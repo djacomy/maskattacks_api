@@ -55,7 +55,7 @@ class TestOrga(BaseTest):
         self.assertEqual(1, obj.id)
 
 
-class TestProduct(BaseTest):
+class TestStock(BaseTest):
     fixtures = ["refs.json", "users.json", "orga.json", 'product.json']
 
     def test_create_product_reference(self):
@@ -72,9 +72,9 @@ class TestProduct(BaseTest):
         product_repo.create_material_stock("SAXXYY", 10)
         obj = product_repo.count_all_stocks_by_reference_and_type()
         self.assertEqual(obj,
-            [('SAXXYY', product_repo.ProductType.materials, 10),
-             ('SAXXXY', product_repo.ProductType.materials, 35)]
-        )
+                         [('SAXXYY',  product_repo.ProductType.materials, 10),
+                          ('SAXXXY',  product_repo.ProductType.materials, 35)]
+                         )
 
     def test_count_stock(self):
         product_repo.create_material_stock("SAXXXY", 25)
@@ -119,3 +119,37 @@ class TestProduct(BaseTest):
         self.assertEqual(obj,
                          [("MEFP2", product_repo.ProductType.kit, 10),
                           ('SAXXXY', product_repo.ProductType.materials, 5)])
+
+
+class TestDeliveryItem(BaseTest):
+    maxDiff = None
+    fixtures = ["refs.json", "users.json", "orga.json", 'product.json', 'stock.json']
+
+    def test_create_kit_delivery_stock(self):
+        product_repo.create_kit_delivery_creation("MEFP2+", 6, 40)
+
+        obj1 = product_repo.count_all_stocks_by_reference_and_type()
+        self.assertEqual(obj1, [('MEFP2+', product_repo.ProductType.kit, 10)])
+        obj2 = product_repo.count_all_delivery_by_reference_and_type()
+        self.assertEqual(obj2, [('MEFP2+', 'Couturier 1', product_repo.ProductType.kit, 40),
+                                ('MTOILE', "Couturier 2", product_repo.ProductType.kit, 120)])
+
+    def test_create_final_delivery_stock(self):
+
+        product_repo.create_final_delivery_stock("MEFP2+", 6, 40)
+
+        obj1 = product_repo.count_all_stocks_by_reference_and_type()
+        self.assertEqual(obj1, [('MEFP2+', product_repo.ProductType.kit, 50)])
+        obj2 = product_repo.count_all_delivery_by_reference_and_type()
+        self.assertEqual(obj2, [('MEFP2+', 'Couturier 1', product_repo.ProductType.final, 40),
+                                ('MTOILE', "Couturier 2", product_repo.ProductType.kit, 120)
+                                ])
+
+    def test_create_delivery_batch(self):
+
+        product_repo.generate_batch_from_delivery_item(1000, 40)
+        obj = product_repo.list_all_batch_by_destination()
+        self.assertEqual(obj,
+                         [(1, 'Couturier 2', product_repo.StatusType.submitted, 40),
+                          (2, 'Couturier 2', product_repo.StatusType.submitted, 40),
+                          (3, 'Couturier 2', product_repo.StatusType.submitted, 40)])

@@ -1,5 +1,6 @@
 from sqlalchemy import *
 from model.product import *
+from model.orga import Organisation
 from repository import reference as ref_repository
 from repository import orga as orga_repository
 
@@ -63,6 +64,19 @@ def count_all_stocks_by_reference_and_type():
     obj = db.session.query(Product.reference, Stock.type, func.sum(Stock.count))\
         .join(Stock, Stock.product_id == Product.id).group_by(Product.reference, Stock.type).all()
     return obj
+
+
+def count_all_delivery_by_reference_and_type():
+    obj = db.session.query(Product.reference, Organisation.name,  DeliveryItem.type, func.sum(DeliveryItem.count))\
+        .join(DeliveryItem, DeliveryItem.product_id == Product.id)\
+        .join(Organisation, Organisation.id == DeliveryItem.manufactor_id)\
+        .group_by(Product.reference, Organisation.name, DeliveryItem.type).all()
+    return obj
+
+
+def list_all_batch_by_destination():
+    return db.session.query(Batch.id, Organisation.name,  Batch.status, Batch.count)\
+        .join(Organisation, Organisation.id == Batch.destination_id).all()
 
 
 def count_stock_by_reference(reference):
@@ -134,3 +148,104 @@ def create_kit_stock(reference, count):
     req.save()
 
     return req
+
+
+def create_kit_delivery_creation(reference, vid,  expected):
+    ref = get_product_reference_by_reference(reference)
+    if not ref:
+        raise ValueError("Unknown reference")
+
+    if ref.type != ProductType.final:
+        raise ValueError("The product reference should be a final one.")
+
+    manufactor = orga_repository.get_organisation(vid)
+    if not  manufactor:
+        raise ValueError("Organization not found.")
+
+    if manufactor.role_obj.code != "man":
+        raise ValueError("Organization is not a manufactor.")
+
+    # checker si le stock des materiaux existe.
+    # checker si il est en nombre suffisant.
+    errors = []
+    stock = count_stock_by_reference(ref.reference)
+    if not stock:
+        errors.append(f"No stock for reference {ref.reference}")
+
+    if stock < expected:
+        errors.append(f"Not enough stock for reference {ref.reference}")
+    if errors:
+        raise ProductException("BAD_STOCK", errors)
+
+    stock_to_remove = []
+    count = expected
+    for stock in list_stocks_by_reference(ref.reference).all():
+        if stock.count >= count:
+            stock.count -= count
+        else:
+            # stock to go to 0 remove it after decrement
+            stock_to_remove.append(stock)
+
+        count -= stock.count
+
+        # remove empty material stock
+    [it.remove() for it in stock_to_remove]
+
+    # create kit delivery item
+    req = DeliveryItem(product=ref, manufactor=manufactor, type=ProductType.kit, count=expected)
+    req.save()
+
+    return req
+
+
+def create_final_delivery_stock(reference, vid,  expected):
+    ref = get_product_reference_by_reference(reference)
+    if not ref:
+        raise ValueError("Unknown reference")
+
+    if ref.type != ProductType.final:
+        raise ValueError("The product reference should be a final one.")
+
+    manufactor = orga_repository.get_organisation(vid)
+    if not manufactor:
+        raise ValueError("Organization not found.")
+
+    if manufactor.role_obj.code != "man":
+        raise ValueError("Organization is not a manufactor.")
+
+    # create product delivery item
+    req = DeliveryItem(product=ref, manufactor=manufactor, type=ProductType.final, count=expected)
+    req.save()
+
+    return req
+
+
+def generate_batch_from_delivery_item(id, batch_size):
+
+    obj = DeliveryItem.query.get(id)
+    if not obj:
+        raise ValueError("No delivery item found.")
+
+    nb = len(obj.batches)
+    if nb > 0:
+        raise ValueError("Delivery item has already been packaged.")
+
+    count = obj.count
+    for i in range(0, int(obj.count / batch_size)):
+        if obj.type == ProductType.kit:
+            batch = Batch(count=batch_size, destination=obj.manufactor)
+        else:
+            batch = Batch(count=batch_size)
+        batch.save()
+        obj.batches.append(batch)
+        count -= batch_size
+
+    if count > 0:
+        if obj.type == ProductType.kit:
+            batch = Batch(count=count, destination=obj.manufactor)
+        else:
+            batch = Batch(count=count)
+        batch.save()
+        obj.batches.append(batch)
+    obj.save()
+

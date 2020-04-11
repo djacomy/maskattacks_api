@@ -61,6 +61,7 @@ class Address(db.Model, BaseModel):
     __tablename__ = 'orga_address'
 
     to_json_filter = ('id', "organization", )
+    print_filter = ('organization', )
 
     id = db.Column(db.Integer, primary_key=True)
     street = db.Column(db.String(50))

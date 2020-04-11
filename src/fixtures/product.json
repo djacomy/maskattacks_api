@@ -36,6 +36,13 @@
         "reference": "MTOILE",
         "type": 3,
         "libelle": "Mask toile"
+      },
+      {
+        "id": 1005,
+        "created_at": "2020-04-09T08:48:28.012869",
+        "reference": "MEFP2+",
+        "type": 3,
+        "libelle": "Super Mask efp2"
       }
     ]
   },
@@ -51,6 +58,16 @@
         "product_id": 1003,
         "material_id": 1002,
         "count": 5
+      },
+      {
+        "product_id": 1005,
+        "material_id": 1001,
+        "count": 4
+      },
+      {
+        "product_id": 1005,
+        "material_id": 1002,
+        "count": 2
       }
     ]
   }
