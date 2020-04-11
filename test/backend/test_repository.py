@@ -59,8 +59,11 @@ class TestProduct(BaseTest):
     fixtures = ["refs.json", "users.json", "orga.json", 'product.json']
 
     def test_create_product_reference(self):
-        obj = product_repo.create_product_reference(product_repo.ProductType.materials,
-                                                    "SAXXXX", "Tissus de 44m2")
+        obj = product_repo.create_product_reference(product_repo.ProductType.final,
+                                                    "BLXXXX", "Blouse")
+
+        product_repo.create_equivalence(obj, "SAXXXY", 5)
+        product_repo.create_equivalence(obj, "SAXXYY", 5)
         self.assertTrue(isinstance(obj, product_repo.Product))
 
     def test_count_all_Stock(self):
@@ -88,8 +91,6 @@ class TestProduct(BaseTest):
         product_repo.create_material_stock("SAXXXY", 10)
 
         prod = product_repo.get_product_reference_by_reference("MEFP2")
-        product_repo.create_equivalence(prod, "SAXXXY", 5)
-        product_repo.create_equivalence(prod, "SAXXYY", 5)
         with self.assertRaises(product_repo.ProductException):
             product_repo.check_kit_stock_creation("MEFP2", 10)
 
@@ -97,8 +98,6 @@ class TestProduct(BaseTest):
         product_repo.create_material_stock("SAXXXY", 25)
 
         prod = product_repo.get_product_reference_by_reference("MEFP2")
-        product_repo.create_equivalence(prod, "SAXXXY", 5)
-        product_repo.create_equivalence(prod, "SAXXYY", 5)
         with self.assertRaises(product_repo.ProductException) as ctx:
             product_repo.check_kit_stock_creation("MEFP2", 10)
 
@@ -107,8 +106,6 @@ class TestProduct(BaseTest):
         product_repo.create_material_stock("SAXXYY", 50)
 
         prod = product_repo.get_product_reference_by_reference("MEFP2")
-        product_repo.create_equivalence(prod, "SAXXXY", 5)
-        product_repo.create_equivalence(prod, "SAXXYY", 5)
         self.assertTrue(product_repo.check_kit_stock_creation("MEFP2", 10))
 
     def test_create_kit_stock(self):
@@ -116,8 +113,6 @@ class TestProduct(BaseTest):
         product_repo.create_material_stock("SAXXYY", 50)
 
         prod = product_repo.get_product_reference_by_reference("MEFP2")
-        product_repo.create_equivalence(prod, "SAXXXY", 5)
-        product_repo.create_equivalence(prod, "SAXXYY", 5)
         self.assertTrue(product_repo.create_kit_stock("MEFP2", 10))
 
         obj = product_repo.count_all_stocks_by_reference_and_type()
