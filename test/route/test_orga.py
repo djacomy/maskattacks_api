@@ -4,7 +4,8 @@ from test.utils.mixins import BaseTest, BaseAuthMixin
 
 
 class TestOrga(BaseTest, BaseAuthMixin):
-    fixtures = ["users.json", "refs.json"]
+    maxDiff = None
+    fixtures = ["users.json", "refs.json", "orga.json"]
 
     def test_get_references(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
@@ -300,32 +301,26 @@ class TestOrga(BaseTest, BaseAuthMixin):
         self.assertEqual(response.json, output)
 
     def test_get_provider(self):
-        self.load_fixtures()
         token = self.authenticate('joe@example.fr', 'super-secret-password')
         url = 'api/organization/2'
         response = self.get(url, token)
-
         self.assertEqual(response.status_code, 200)
-        output = {"id": 1,
-                  "vid": 2,
-                  "role": "pro",
-                  "status": "running",
-                  'availability': 'midtime',
-                  'address':
-                      {
-                          "street": "30 rue des visiteurs",
-                          "zipcode": "54344",
-                          "city": "covid-19",
-                          "lon": None,
-                          "lat": None
-                      },
-                  'data': {'type': 'fm',
-                           'subtype': 'fta'},
-                  }
-        self.assertEqual(response.json, output)
+        self.assertEqual(response.json,
+                         {'id': 1000,
+                          'vid': 2,
+                          'role': 'pro',
+                          'status': 'running',
+                          'availability': 'midtime',
+                          'address': {'street': '30 rue des visiteurs',
+                                      'zipcode': '54344',
+                                      'city': 'covid-19',
+                                      'lon': None, 'lat': None},
+                          'data': {'type': 'fm',
+                                   'subtype': 'fta'}
+                          }
+                         )
 
     def test_update_provider_status(self):
-        self.load_fixtures()
         token = self.authenticate('joe@example.fr', 'super-secret-password')
         url = 'api/organization/2'
         response = self.put(url, token, {"status": "rejected"})
@@ -336,16 +331,14 @@ class TestOrga(BaseTest, BaseAuthMixin):
         self.assertEqual(obj.status_obj.code, "rejected")
 
     def test_search_organizations(self):
-        self.load_fixtures()
         token = self.authenticate('joe@example.fr', 'super-secret-password')
         url = 'api/organizations'
         response = self.get(url, token)
         self.assertEqual(response.status_code, 200)
         self.assertIn("organizations", response.json)
-        self.assertEqual(4, len(response.json["organizations"]))
+        self.assertEqual(6, len(response.json["organizations"]))
 
     def test_search_organizations_pagination(self):
-        self.load_fixtures()
         token = self.authenticate('joe@example.fr', 'super-secret-password')
         url = 'api/organizations'
         response = self.get(url, token, {"page": 2, "size": 2})
@@ -353,13 +346,12 @@ class TestOrga(BaseTest, BaseAuthMixin):
         self.assertIn("organizations", response.json)
         self.assertEqual(2, len(response.json["organizations"]))
         self.assertEqual(response.json["organizations"],
-                         [{'id': 3, 'vid': 3, 'role': 'cus', 'status': 'running', 'availability': 'midtime',
-                           'address': {'street': '30 rue clients', 'zipcode': '96344',
-                                       'city': 'Chanceux', 'lon': None, 'lat': None},
-                           'data': {'type': 'med', 'subtype': 'hop'}},
-                          {'id': 4, 'vid': 5, 'role': 'cus', 'status': 'active', 'availability': 'fulltime',
-                           'address': {'street': '30 rue transporter', 'zipcode': '34344',
-                                       'city': 'Sauvequipeut', 'lon': None, 'lat': None},
+                         [{'id': 1002, 'vid': 3, 'role': 'cus', 'status': 'running', 'availability': 'midtime',
+                           'address': {'street': '30 rue clients', 'zipcode': '96344', 'city': 'Chanceux', 'lon': None,
+                                       'lat': None}, 'data': {'type': 'med', 'subtype': 'hop'}},
+                          {'id': 1003, 'vid': 5, 'role': 'cus', 'status': 'active', 'availability': 'fulltime',
+                           'address': {'street': '30 rue transporter', 'zipcode': '34344', 'city': 'Sauvequipeut',
+                                       'lon': None, 'lat': None},
                            'data': {'type': 'tran', 'capacity': {'type': 'class', 'value': 'class'},
                                     'range': {'type': 'km', 'value': 2}}}]
                          )

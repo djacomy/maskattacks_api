@@ -20,7 +20,7 @@ class TestOrga(BaseTest):
     fixtures = ["refs.json",  "users.json", "orga.json"]
 
     def test_get_provider(self):
-        obj = orga_repo.get_provider(1).first()
+        obj = orga_repo.get_provider(1000).first()
         self.assertEqual(obj.json, {'type': 'fm', 'subtype': 'fta'})
 
     def test_create_manufactor_orga(self):

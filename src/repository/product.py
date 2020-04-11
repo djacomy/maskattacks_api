@@ -1,6 +1,7 @@
 from sqlalchemy import *
 from model.product import *
 from repository import reference as ref_repository
+from repository import orga as orga_repository
 
 
 class ProductException(Exception):
@@ -133,8 +134,3 @@ def create_kit_stock(reference, count):
     req.save()
 
     return req
-
-
-
-
-

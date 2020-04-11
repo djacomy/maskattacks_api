@@ -1,12 +1,9 @@
 import unittest
 import json
-import os
-from builtins import super
 import config
 
 from flask_fixtures import FixturesMixin
 
-from repository.orga import create_organization
 
 from server import server
 from model.abc import db
@@ -30,12 +27,6 @@ class BaseTest(unittest.TestCase, FixturesMixin):
 
 
 class BaseAuthMixin(object):
-
-    def load_fixtures(self):
-        fixtures_dirs = os.path.join(config.PROJECT_DIR, "test", "fixtures")
-        with open(os.path.join(fixtures_dirs, "orga.json")) as fp:
-            for orga in json.load(fp):
-                create_organization(orga)
 
     def authenticate(self, email, password):
         response = self.client.post(
