@@ -1,6 +1,6 @@
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Command, Manager, Server, Shell
-from commands.fixture import DumpCommand, ImportReferenceCommand
+from commands.fixture import DumpCommand, ImportReferenceCommand, LoadFixturesCommand
 
 
 import config
@@ -16,6 +16,7 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 manager.add_command('dump', DumpCommand)
 manager.add_command('import_ref', ImportReferenceCommand)
+manager.add_command('load_fixtures', LoadFixturesCommand)
 
 if __name__ == '__main__':
     manager.run()
