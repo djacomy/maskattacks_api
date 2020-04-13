@@ -35,6 +35,25 @@ class OrganisationsApi(Resource):
         notes='Organisations get',
         responseClass=OrganisationListSerializer.__name__,
         nickname='organisation',
+        parameters=[
+            {
+                "name": "page",
+                "description": "page number",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": "int",
+                "paramType": "body"
+            },
+            {
+                "name": "size",
+                "description": "number of items returned",
+                "required": False,
+                "default": 10,
+                "allowMultiple": False,
+                "dataType": "int",
+                "paramType": "body"
+            }
+        ],
         responseMessages=[
             {
                 "code": 200,

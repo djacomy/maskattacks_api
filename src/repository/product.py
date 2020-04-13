@@ -1,8 +1,12 @@
+import constant
+
 from sqlalchemy import *
 from model.product import *
 from model.orga import Organisation
 from repository import reference as ref_repository
 from repository import orga as orga_repository
+
+from util.validator import get_error_messages
 
 
 class ProductException(Exception):
@@ -14,8 +18,6 @@ class ProductException(Exception):
 
 
 def create_product_reference(product_type, reference, libelle):
-    if not isinstance(product_type, ProductType):
-        raise ValueError("Type should be a instance of product type.")
 
     if product_type == ProductType.kit:
         raise ValueError("Type cannot be a kit.")
@@ -25,16 +27,17 @@ def create_product_reference(product_type, reference, libelle):
     return req
 
 
+def list_product_references(page, pernumber=10):
+    return [item.to_json() for item in Product.query.paginate(page, per_page=pernumber).items]
+
+
 def get_product_reference_by_reference(ref):
     return Product.query.filter(Product.reference == ref).first()
 
 
 def create_equivalence(product, reference_material, count):
-    if not isinstance(product, Product):
-        raise ValueError("product should be a Product instance")
+    assert True == isinstance(product, Product)
     material = get_product_reference_by_reference(reference_material)
-    if not material:
-        raise ValueError("Unknown reference")
 
     eq = ProductEquivalence(product=product, material=material, count=count)
     eq.save()

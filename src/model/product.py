@@ -38,6 +38,9 @@ class ProductEquivalence(db.Model, BaseModel):
     __tablename__ = 'product_equivalence'
     __table_args__ = {'extend_existing': True}
 
+    to_json_filter = ('product', 'materials',)
+    print_filter = ('product', 'material',)
+
     product_id = db.Column(db.Integer, db.ForeignKey('product_product.id'), primary_key=True)
     material_id = db.Column(db.Integer, db.ForeignKey('product_product.id'), primary_key=True)
     count = db.Column(db.Integer, nullable=False)
@@ -47,6 +50,9 @@ class ProductEquivalence(db.Model, BaseModel):
 
 class Product(db.Model, BaseModel):
     __tablename__ = 'product_product'
+
+    to_json_filter = ('materials', 'material', "created_at",)
+    print_filter = ('materials', 'material')
 
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -61,6 +67,20 @@ class Product(db.Model, BaseModel):
                              primaryjoin=(ProductEquivalence.product_id == id),
                              secondaryjoin=(ProductEquivalence.material_id == id),
                              )
+
+    def to_json(self):
+        p = self.json
+        p["type"] = ProductType.get_name(p["type"])
+        if self.type != ProductType.final:
+            return p
+        lst = []
+        for item in self.materials:
+            tmp = item.json
+            tmp["type"] = ProductType.get_name(tmp["type"])
+            tmp["count"] = item.material[0].count
+            lst.append(tmp)
+        p["materials"] = lst
+        return p
 
 
 class Stock(db.Model, BaseModel):

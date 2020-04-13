@@ -58,6 +58,52 @@ class TestOrga(BaseTest):
 class TestStock(BaseTest):
     fixtures = ["refs.json", "users.json", "orga.json", 'product.json']
 
+    def test_list_product_references(self):
+        obj = product_repo.list_product_references(1)
+        self.assertEqual(obj,
+                         [{'id': 1000, 'reference': 'SAXXXY', 'type': 'materials',
+                           'libelle': 'Tissus de 50m2'},
+                          {'id': 1001, 'reference': 'SAXXXZ', 'type': 'materials',
+                           'libelle': 'Tissus de 30m2'},
+                          {'id': 1002, 'reference': 'SAXXYY', 'type': 'materials',
+                           'libelle': 'Elastique pour mask'},
+                          {'id': 1003, 'reference': 'MEFP2', 'type': 'final',
+                           'libelle': 'Mask efp2',
+                           'materials': [{'id': 1000, 'reference': 'SAXXXY', 'type': "materials",
+                                          'libelle': 'Tissus de 50m2', 'count': 5},
+                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                          'libelle': 'Elastique pour mask', 'count': 5}]},
+                          {'id': 1004, 'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
+                           'materials': []},
+                          {'id': 1005, 'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
+                           'materials': [{'id': 1001, 'reference': 'SAXXXZ',
+                                          'type': "materials", 'libelle': 'Tissus de 30m2', 'count': 4},
+                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                          'libelle': 'Elastique pour mask', 'count': 5}
+                                         ]
+                           }
+                          ])
+
+    def test_list_product_references_page(self):
+        obj = product_repo.list_product_references(2, 3)
+        self.assertEqual(obj,
+                         [{'id': 1003, 'reference': 'MEFP2', 'type': 'final',
+                           'libelle': 'Mask efp2',
+                           'materials': [{'id': 1000, 'reference': 'SAXXXY', 'type': "materials",
+                                          'libelle': 'Tissus de 50m2', 'count': 5},
+                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                          'libelle': 'Elastique pour mask', 'count': 5}]},
+                          {'id': 1004, 'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
+                           'materials': []},
+                          {'id': 1005, 'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
+                           'materials': [{'id': 1001, 'reference': 'SAXXXZ',
+                                          'type': "materials", 'libelle': 'Tissus de 30m2', 'count': 4},
+                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                          'libelle': 'Elastique pour mask', 'count': 5}
+                                         ]
+                           }
+                          ])
+
     def test_create_product_reference(self):
         obj = product_repo.create_product_reference(product_repo.ProductType.final,
                                                     "BLXXXX", "Blouse")

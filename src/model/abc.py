@@ -3,12 +3,14 @@ import datetime
 import enum
 from weakref import WeakValueDictionary
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 from sqlalchemy import inspect
 from sqlalchemy.orm import aliased
 import sqlalchemy.types as types
 
 
 db = SQLAlchemy()
+ma = Marshmallow()
 
 
 class MetaBaseModel(db.Model.__class__):
@@ -87,6 +89,9 @@ class BaseModel:
     def remove(self):
         db.session.delete(self)
         db.session.commit()
+
+    def refresh(self):
+        db.session.refresh(self)
 
 
 class ChoiceType(types.TypeDecorator):
