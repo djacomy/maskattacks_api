@@ -302,7 +302,7 @@ class TestOrga(BaseTest, BaseAuthMixin):
 
     def test_get_provider(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
-        url = 'api/organization/2'
+        url = 'api/organizations/2'
         response = self.get(url, token)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json,
@@ -322,7 +322,7 @@ class TestOrga(BaseTest, BaseAuthMixin):
 
     def test_update_provider_status(self):
         token = self.authenticate('joe@example.fr', 'super-secret-password')
-        url = 'api/organization/2'
+        url = 'api/organizations/2'
         response = self.put(url, token, {"status": "rejected"})
 
         self.assertEqual(response.status_code, 204)
