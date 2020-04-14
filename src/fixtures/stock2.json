@@ -1,0 +1,48 @@
+[
+  {
+    "model": "model.Stock",
+    "records": [
+      {
+        "id": 1000,
+        "created_at": "2020-04-09T08:48:28.012869",
+        "type": 2,
+        "product_id": 1005,
+        "count": 50
+      },
+      {
+        "id": 1001,
+        "created_at": "2020-04-09T08:48:28.012869",
+        "type": 1,
+        "product_id": 1000,
+        "count": 100
+      },
+      {
+        "id": 1002,
+        "created_at": "2020-04-10T08:48:28.012869",
+        "type": 1,
+        "product_id": 1000,
+        "count": 100
+      },
+      {
+        "id": 1003,
+        "created_at": "2020-04-10T08:48:28.012869",
+        "type": 1,
+        "product_id": 1002,
+        "count": 200
+      }
+    ]
+  },
+  {
+    "model": "model.DeliveryItem",
+    "records": [
+      {
+        "id": 1000,
+        "created_at": "2020-04-09T08:48:28.012869",
+        "type": 2,
+        "product_id": 1004,
+        "manufactor_id": 1005,
+        "count": 120
+      }
+    ]
+  }
+]

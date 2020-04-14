@@ -86,7 +86,7 @@ class Product(db.Model, BaseModel):
 class Stock(db.Model, BaseModel):
     __tablename__ = 'product_stock'
 
-    to_json_filter = ('id', "product_type_id", "product_type_id", 'product_type_obj', )
+    to_json_filter = ('id', "product_type_id", "product_type_id", 'product', )
 
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -100,6 +100,13 @@ class Stock(db.Model, BaseModel):
     product = db.relationship(Product, foreign_keys=[product_id])
 
     count = db.Column(db.Integer, default=0, nullable=False)
+
+    def to_json(self):
+        return {
+            "reference": self.product.reference,
+            "type": ProductType.get_name(self.type),
+            "count": self.count
+        }
 
 
 class DeliveryItemBatch(db.Model, BaseModel):

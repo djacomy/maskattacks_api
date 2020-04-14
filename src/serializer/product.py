@@ -49,4 +49,34 @@ class ProductEquivalenceListRequestSerializer:
     }
 
 
+@swagger.model
+class StockResponseSerializer:
+    resource_fields = {
+        'reference': fields.String,
+        'type': fields.String,
+        'count': fields.Integer
+    }
+    required = ["reference", "count"]
+
+
+@swagger.model
+@swagger.nested(stocks=StockResponseSerializer.__name__)
+class StockListResponseSerializer:
+    resource_fields = {
+        'total': fields.Integer,
+        'page': fields.Integer,
+        'size': fields.Integer,
+        'stocks': fields.List(fields.Nested(StockResponseSerializer.resource_fields)),
+
+    }
+
+@swagger.model
+class StockCreationRequestSerializer:
+    resource_fields = {
+        'type': fields.String,
+        'reference': fields.String,
+        'count': fields.Integer
+    }
+    required = ['type', "reference", 'count']
+
 

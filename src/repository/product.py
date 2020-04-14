@@ -34,7 +34,6 @@ def list_product_references(page, pernumber=10):
 def get_product_reference_by_reference(ref):
     return Product.query.filter(Product.reference == ref).first()
 
-
 def create_equivalence(product, reference_material, count):
     assert True == isinstance(product, Product)
     material = get_product_reference_by_reference(reference_material)
@@ -105,10 +104,25 @@ def count_stock_by_reference(reference):
     return obj[1]
 
 
+def get_stock_by_reference(reference):
+    obj = db.session.query(Product.reference, Stock.type, func.sum(Stock.count))\
+        .join(Stock, Stock.product_id == Product.id)\
+        .filter(Product.reference == reference).group_by(Product.reference, Stock.type).first()
+    if obj is None:
+        return
+
+    return {
+        "reference": obj[0],
+        "type": ProductType.get_name(obj[1]),
+        "count": obj[2]
+    }
+
+
 def list_stocks_by_reference(reference):
     return Stock.query\
         .join(Product, aliased=True)\
         .filter(Product.reference == reference).order_by(Stock.created_at)
+
 
 
 def check_kit_stock_creation(reference, count):
@@ -125,10 +139,10 @@ def check_kit_stock_creation(reference, count):
     for item in ref.materials:
         mat_stock = count_stock_by_reference(item.reference)
         if not mat_stock:
-            errors.append(f"No stock for reference {item.reference}")
+            errors.append(get_error_messages(constant.NO_STOCK, item.reference))
             continue
-        if item.material[0].count * count < mat_stock:
-            errors.append(f"Not enough stock for reference {item.reference}")
+        if item.material[0].count * count > mat_stock:
+            errors.append(get_error_messages(constant.NOT_ENOUGH_STOCK, item.reference))
             continue
     if errors:
         raise ProductException("BAD_STOCK", errors)
