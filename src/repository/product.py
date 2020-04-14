@@ -63,23 +63,37 @@ def create_material_stock(reference, count):
     return req
 
 
-def count_all_stocks_by_reference_and_type():
-    obj = db.session.query(Product.reference, Stock.type, func.sum(Stock.count))\
-        .join(Stock, Stock.product_id == Product.id).group_by(Product.reference, Stock.type).all()
-    return obj
+def count_all_stocks_by_reference_and_type(page=1, limit=10):
+    return db.session.query(Product.reference, Stock.type, func.sum(Stock.count))\
+        .join(Stock, Stock.product_id == Product.id)\
+        .group_by(Product.reference, Stock.type)\
+        .paginate(page, limit)
 
 
-def count_all_delivery_by_reference_and_type():
-    obj = db.session.query(Product.reference, Organisation.name,  DeliveryItem.type, func.sum(DeliveryItem.count))\
+def count_all_delivery_by_reference_and_type(page=1, limit=10):
+    """
+
+    :param offset:
+    :param limit:
+    :return: Iterator
+    """
+    return db.session.query(Product.reference, Organisation.name,  DeliveryItem.type, func.sum(DeliveryItem.count))\
         .join(DeliveryItem, DeliveryItem.product_id == Product.id)\
         .join(Organisation, Organisation.id == DeliveryItem.manufactor_id)\
-        .group_by(Product.reference, Organisation.name, DeliveryItem.type).all()
-    return obj
+        .group_by(Product.reference, Organisation.name, DeliveryItem.type)\
+        .paginate(page, limit)
 
 
-def list_all_batch_by_destination():
+def list_all_batch_by_destination(page=1, limit=10):
+    """
+
+    :param offset:
+    :param limit:
+    :return:  Iterator
+    """
     return db.session.query(Batch.id, Organisation.name,  Batch.status, Batch.count)\
-        .join(Organisation, Organisation.id == Batch.destination_id).all()
+        .join(Organisation, Organisation.id == Batch.destination_id)\
+        .paginate(page, limit)
 
 
 def count_stock_by_reference(reference):
