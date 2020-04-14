@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from repository import orga as orga_repo
-from repository import product as product_repo
+from repository import product as product_repo, orga as orga_repo
 from test.utils.mixins import BaseTest
 
 
@@ -113,9 +112,11 @@ class TestStock(BaseTest):
         self.assertTrue(isinstance(obj, product_repo.Product))
 
     def test_count_all_Stock(self):
-        product_repo.create_material_stock("SAXXXY", 25)
-        product_repo.create_material_stock("SAXXXY", 10)
-        product_repo.create_material_stock("SAXXYY", 10)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 25)
+        product_repo.create_material_stock(obj, 10)
+        obj = product_repo.get_product_reference_by_reference("SAXXYY")
+        product_repo.create_material_stock(obj, 10)
         obj = [it for it in product_repo.count_all_stocks_by_reference_and_type().items]
         self.assertEqual(obj,
                          [('SAXXYY',  product_repo.ProductType.materials, 10),
@@ -123,8 +124,10 @@ class TestStock(BaseTest):
                          )
 
     def test_count_stock(self):
-        product_repo.create_material_stock("SAXXXY", 25)
-        product_repo.create_material_stock("SAXXXY", 10)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 25)
+        product_repo.create_material_stock(obj, 10)
+
         obj = product_repo.count_stock_by_reference("SAXXXY")
         self.assertEqual(35, obj)
 
@@ -133,33 +136,40 @@ class TestStock(BaseTest):
                          [('SAXXXY', 25), ('SAXXXY', 10)])
 
     def test_check_stock_error_1(self):
-        product_repo.create_material_stock("SAXXXY", 35)
-        product_repo.create_material_stock("SAXXXY", 10)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 35)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 10)
 
-        product_repo.get_product_reference_by_reference("MEFP2")
+        obj = product_repo.get_product_reference_by_reference("MEFP2")
         with self.assertRaises(product_repo.ProductException):
-            product_repo.check_kit_stock_creation("MEFP2", 10)
+            product_repo.check_kit_stock_creation(obj, 10)
 
     def test_check_stock_error_2(self):
-        product_repo.create_material_stock("SAXXXY", 25)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 25)
 
-        product_repo.get_product_reference_by_reference("MEFP2")
+        obj = product_repo.get_product_reference_by_reference("MEFP2")
         with self.assertRaises(product_repo.ProductException) as ctx:
-            product_repo.check_kit_stock_creation("MEFP2", 10)
+            product_repo.check_kit_stock_creation(obj, 10)
 
     def test_check_kit_stock(self):
-        product_repo.create_material_stock("SAXXXY", 50)
-        product_repo.create_material_stock("SAXXYY", 50)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 50)
+        obj = product_repo.get_product_reference_by_reference("SAXXYY")
+        product_repo.create_material_stock(obj, 50)
 
-        product_repo.get_product_reference_by_reference("MEFP2")
-        self.assertTrue(product_repo.check_kit_stock_creation("MEFP2", 10))
+        obj = product_repo.get_product_reference_by_reference("MEFP2")
+        self.assertTrue(product_repo.check_kit_stock_creation(obj, 10))
 
     def test_create_kit_stock(self):
-        product_repo.create_material_stock("SAXXXY", 55)
-        product_repo.create_material_stock("SAXXYY", 50)
+        obj = product_repo.get_product_reference_by_reference("SAXXXY")
+        product_repo.create_material_stock(obj, 55)
+        obj = product_repo.get_product_reference_by_reference("SAXXYY")
+        product_repo.create_material_stock(obj, 50)
 
-        prod = product_repo.get_product_reference_by_reference("MEFP2")
-        self.assertTrue(product_repo.create_kit_stock("MEFP2", 10))
+        obj = product_repo.get_product_reference_by_reference("MEFP2")
+        self.assertTrue(product_repo.create_kit_stock(obj, 10))
 
         obj = [it for it in product_repo.count_all_stocks_by_reference_and_type().items]
         self.assertEqual(obj,
@@ -168,11 +178,13 @@ class TestStock(BaseTest):
 
 
 class TestDeliveryItem(BaseTest):
-    maxDiff = None
     fixtures = ["refs.json", "users.json", "orga.json", 'product.json', 'stock.json']
 
     def test_create_kit_delivery_stock(self):
-        product_repo.create_kit_delivery_creation("MEFP2+", 6, 40)
+
+        obj = product_repo.get_product_reference_by_reference("MEFP2+")
+        manufactor = orga_repo.get_organisation(6)
+        product_repo.create_kit_delivery_stock(obj, 40, manufactor)
 
         obj1 = [it for it in product_repo.count_all_stocks_by_reference_and_type().items]
         self.assertEqual(obj1, [('MEFP2+', product_repo.ProductType.kit, 10)])
@@ -181,8 +193,9 @@ class TestDeliveryItem(BaseTest):
                                 ('MTOILE', "Couturier 2", product_repo.ProductType.kit, 120)])
 
     def test_create_final_delivery_stock(self):
-
-        product_repo.create_final_delivery_stock("MEFP2+", 6, 40)
+        obj = product_repo.get_product_reference_by_reference("MEFP2+")
+        manufactor = orga_repo.get_organisation(6)
+        product_repo.create_final_delivery_stock(obj, 40, manufactor)
 
         obj1 = [it for it in product_repo.count_all_stocks_by_reference_and_type().items]
         self.assertEqual(obj1, [('MEFP2+', product_repo.ProductType.kit, 50)])

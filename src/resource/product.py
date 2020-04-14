@@ -305,13 +305,13 @@ class StocksApi(Resource):
         if product.type == prod_type.final:
             # check the material availability
             try:
-                product_repository.check_kit_stock_creation(params.get("reference"), params.get("count"))
+                product_repository.check_kit_stock_creation(product, params.get("count"))
             except product_repository.ProductException as exc:
                 return {"errors": exc.details}, 400
 
         func = product_repository.create_kit_stock if product.type == prod_type.final \
             else product_repository.create_material_stock
-        obj = func(params.get("reference"), params.get("count"))
+        obj = func(product, params.get("count"))
 
         return obj.to_json(), 200
 

@@ -17,22 +17,13 @@ class ProductException(Exception):
         self.details = details
 
 
-def create_product_reference(product_type, reference, libelle):
-
-    if product_type == ProductType.kit:
-        raise ValueError("Type cannot be a kit.")
-
-    req = Product(reference=reference, type=product_type, libelle=libelle)
-    req.save()
-    return req
-
-
 def list_product_references(page, pernumber=10):
     return [item.to_json() for item in Product.query.paginate(page, per_page=pernumber).items]
 
 
 def get_product_reference_by_reference(ref):
     return Product.query.filter(Product.reference == ref).first()
+
 
 def create_equivalence(product, reference_material, count):
     assert True == isinstance(product, Product)
@@ -41,25 +32,6 @@ def create_equivalence(product, reference_material, count):
     eq = ProductEquivalence(product=product, material=material, count=count)
     eq.save()
     return eq
-
-
-def create_material_stock(reference, count):
-    """
-
-    :param reference:
-    :param count:
-    :return:
-    """
-    ref = get_product_reference_by_reference(reference)
-    if not ref:
-        raise ValueError("Unknown reference")
-
-    if ref.type != ProductType.materials:
-        raise ValueError("The product reference should be a reference one. ")
-
-    req = Stock(product=ref, type=ref.type, count=count)
-    req.save()
-    return req
 
 
 def count_all_stocks_by_reference_and_type(page=1, limit=10):
@@ -124,14 +96,9 @@ def list_stocks_by_reference(reference):
         .filter(Product.reference == reference).order_by(Stock.created_at)
 
 
-
-def check_kit_stock_creation(reference, count):
-    ref = get_product_reference_by_reference(reference)
-    if not ref:
-        raise ValueError("Unknown reference")
-
-    if ref.type != ProductType.final:
-        raise ValueError("The product reference should be a final one.")
+def check_kit_stock_creation(ref, count):
+    assert isinstance(ref, Product) == True
+    assert ref.type == ProductType.final
 
     # checker si le stock des materiaux existe.
     # checker si il est en nombre suffisant.
@@ -150,27 +117,77 @@ def check_kit_stock_creation(reference, count):
     return True
 
 
-def create_kit_stock(reference, count):
-    ref = get_product_reference_by_reference(reference)
-    if not ref:
-        raise ValueError("Unknown reference")
+def check_kit_delivery_creation(ref, expected):
+    assert isinstance(ref, Product) == True
+    assert ref.type == ProductType.final
 
-    if ref.type != ProductType.final:
-        raise ValueError("The product reference should be a final one.")
+    # checker si le stock des materiaux existe.
+    # checker si il est en nombre suffisant.
+    errors = []
+    stock = count_stock_by_reference(ref.reference)
+    if not stock:
+        errors.append(get_error_messages(constant.NO_STOCK, ref.reference))
+
+    if expected > stock:
+        errors.append(get_error_messages(constant.NOT_ENOUGH_STOCK, ref.reference))
+    if errors:
+        raise ProductException("BAD_STOCK", errors)
+
+    return True
+
+
+def create_product_reference(product_type, reference, libelle):
+
+    if product_type == ProductType.kit:
+        raise ValueError("Type cannot be a kit.")
+
+    req = Product(reference=reference, type=product_type, libelle=libelle)
+    req.save()
+    return req
+
+
+def create_material_stock(ref, count, *args):
+    """
+
+    :param reference:
+    :param count:
+    :return:
+    """
+    assert isinstance(ref, Product) == True
+    assert ref.type == ProductType.materials
+
+    req = Stock(product=ref, type=ref.type, count=count)
+    req.save()
+    return req
+
+
+def create_kit_stock(ref, count, *args):
+    """
+
+    :param ref:
+    :param count:
+    :return:
+    """
+    assert isinstance(ref, Product) == True
+    assert ref.type == ProductType.final
 
     # update stock materials
+    stock_to_save = []
     stock_to_remove = []
     for item in ref.materials:
         expected = item.material[0].count * count
         for stock in list_stocks_by_reference(item.reference):
             if stock.count > expected:
                 stock.count -= expected
+                stock_to_save.append(stock)
             else:
                 # stock to go to 0 remove it after decrement
                 stock_to_remove.append(stock)
 
             expected -= stock.count
 
+    # save
+    [it.save() for it in stock_to_save]
     # remove empty material stock
     [it.remove() for it in stock_to_remove]
 
@@ -181,71 +198,44 @@ def create_kit_stock(reference, count):
     return req
 
 
-def create_kit_delivery_creation(reference, vid,  expected):
-    ref = get_product_reference_by_reference(reference)
-    if not ref:
-        raise ValueError("Unknown reference")
-
-    if ref.type != ProductType.final:
-        raise ValueError("The product reference should be a final one.")
-
-    manufactor = orga_repository.get_organisation(vid)
-    if not  manufactor:
-        raise ValueError("Organization not found.")
-
-    if manufactor.role_obj.code != "man":
-        raise ValueError("Organization is not a manufactor.")
-
-    # checker si le stock des materiaux existe.
-    # checker si il est en nombre suffisant.
-    errors = []
-    stock = count_stock_by_reference(ref.reference)
-    if not stock:
-        errors.append(f"No stock for reference {ref.reference}")
-
-    if stock < expected:
-        errors.append(f"Not enough stock for reference {ref.reference}")
-    if errors:
-        raise ProductException("BAD_STOCK", errors)
+def create_kit_delivery_stock(ref, expected, man):
+    assert isinstance(ref, Product) == True
+    assert ref.type == ProductType.final
+    assert isinstance(man, Organisation) == True
+    assert man.role_obj.code == "man"
 
     stock_to_remove = []
+    stock_to_save = []
     count = expected
     for stock in list_stocks_by_reference(ref.reference).all():
         if stock.count >= count:
             stock.count -= count
+            stock_to_save.append(stock)
         else:
             # stock to go to 0 remove it after decrement
             stock_to_remove.append(stock)
 
         count -= stock.count
 
-        # remove empty material stock
+    [it.save() for it in stock_to_remove]
+    # remove empty material stock
     [it.remove() for it in stock_to_remove]
 
     # create kit delivery item
-    req = DeliveryItem(product=ref, manufactor=manufactor, type=ProductType.kit, count=expected)
+    req = DeliveryItem(product=ref, manufactor=man, type=ProductType.kit, count=expected)
     req.save()
 
     return req
 
 
-def create_final_delivery_stock(reference, vid,  expected):
-    ref = get_product_reference_by_reference(reference)
-    if not ref:
-        raise ValueError("Unknown reference")
-
-    if ref.type != ProductType.final:
-        raise ValueError("The product reference should be a final one.")
-
-    manufactor = orga_repository.get_organisation(vid)
-    if not manufactor:
-        raise ValueError("Organization not found.")
-
-    if manufactor.role_obj.code != "man":
-        raise ValueError("Organization is not a manufactor.")
+def create_final_delivery_stock(ref, expected, man):
+    assert isinstance(ref, Product) == True
+    assert ref.type == ProductType.final
+    assert isinstance(man, Organisation) == True
+    assert man.role_obj.code == "man"
 
     # create product delivery item
-    req = DeliveryItem(product=ref, manufactor=manufactor, type=ProductType.final, count=expected)
+    req = DeliveryItem(product=ref, manufactor=man, type=ProductType.final, count=expected)
     req.save()
 
     return req
