@@ -1,6 +1,6 @@
 [
   {
-    "model": "maskattaks.model.Product",
+    "model": "maskattacks.model.Product",
     "records": [
       {
         "id": 1000,
@@ -47,7 +47,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.ProductEquivalence",
+    "model": "maskattacks.model.ProductEquivalence",
     "records": [
       {
         "product_id": 1003,

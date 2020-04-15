@@ -2,12 +2,12 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from flask_restful_swagger import swagger
 
-from maskattaks.util.validator import parse_params
-from maskattaks.serializer.orga import (OrganisationSerializer, OrganisationListSerializer,
-                             ReferencesSerializer, OrganisationUpdateSerializer)
+from maskattacks.util.validator import parse_params
+from maskattacks.serializer.orga import (OrganisationSerializer, OrganisationListSerializer,
+                                         ReferencesSerializer, OrganisationUpdateSerializer)
 
-from maskattaks.repository import reference as ref_repository, orga as orga_repository
-from maskattaks.validator import orga as orga_validator
+from maskattacks.repository import reference as ref_repository, orga as orga_repository
+from maskattacks.validator import orga as orga_validator
 
 
 class ReferencesApi(Resource):

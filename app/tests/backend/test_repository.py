@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from maskattaks.repository import orga as orga_repo, product as product_repo
+from maskattacks.repository import orga as orga_repo, product as product_repo
 from tests.utils.mixins import BaseTest
 
 

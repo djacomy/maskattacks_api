@@ -8,15 +8,15 @@ from flask_restful_swagger import swagger
 
 from flask_jwt_extended import create_access_token, jwt_required
 
-from maskattaks.repository import (reference as ref_repository,
-                        orga as orga_repository,
-                        product as product_repository)
-from maskattaks.serializer.product import (ProductListResponseSerializer, ProductSerializer,
-                                ProductEquivalenceListRequestSerializer,
-                                StockListResponseSerializer, StockCreationRequestSerializer, StockResponseSerializer)
+from maskattacks.repository import (reference as ref_repository,
+                                    orga as orga_repository,
+                                    product as product_repository)
+from maskattacks.serializer.product import (ProductListResponseSerializer, ProductSerializer,
+                                            ProductEquivalenceListRequestSerializer,
+                                            StockListResponseSerializer, StockCreationRequestSerializer, StockResponseSerializer)
 
-from maskattaks.validator import orga as orga_validator, product as product_validator
-from maskattaks.util.validator import parse_params, get_error_messages
+from maskattacks.validator import orga as orga_validator, product as product_validator
+from maskattacks.util.validator import parse_params, get_error_messages
 
 
 class ProductsApi(Resource):

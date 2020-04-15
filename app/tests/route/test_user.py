@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from maskattaks.model.user import User
+from maskattacks.model.user import User
 from tests.utils.mixins import BaseTest, BaseAuthMixin
 
 

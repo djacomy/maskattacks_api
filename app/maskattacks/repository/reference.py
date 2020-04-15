@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from sqlalchemy import or_
 
-from maskattaks.model.orga import Reference, ReferenceType, Organisation
+from maskattacks.model.orga import Reference, ReferenceType, Organisation
 
 
 def find_reference_by_type_and_libelle( type, libelle):

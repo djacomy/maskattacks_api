@@ -4,10 +4,10 @@ from flask_restful import Api
 from flask_restful_swagger import swagger
 
 from config import BASE_SERVER_PATH
-from maskattaks.resource.user import SignupApi, LoginApi
-from maskattaks.resource.orga import OrganisationsApi, OrganisationApi, ReferencesApi
-from maskattaks.resource.user import UserAPI, UserListAPI
-from maskattaks.resource.product import ProductsApi, ProductApi, StocksApi, StockApi
+from maskattacks.resource.user import SignupApi, LoginApi
+from maskattacks.resource.orga import OrganisationsApi, OrganisationApi, ReferencesApi
+from maskattacks.resource.user import UserAPI, UserListAPI
+from maskattacks.resource.product import ProductsApi, ProductApi, StocksApi, StockApi
 
 api_blueprint = Blueprint('api', __name__)
 

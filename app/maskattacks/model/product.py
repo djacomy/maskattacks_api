@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy_utils import ChoiceType
 from sqlalchemy.orm import relationship
 from .abc import db, BaseModel
-from maskattaks.model.orga import Organisation
+from maskattacks.model.orga import Organisation
 
 
 class StatusType(enum.Enum):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from maskattaks.validator.orga import check_address, check_organisation
+from maskattacks.validator.orga import check_address, check_organisation
 from tests.utils.mixins import BaseTest
 
 

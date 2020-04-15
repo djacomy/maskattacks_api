@@ -1,6 +1,6 @@
 import unittest
 
-from maskattaks.repository import product as prod_repo
+from maskattacks.repository import product as prod_repo
 from tests.utils.mixins import BaseTest, BaseAuthMixin
 
 

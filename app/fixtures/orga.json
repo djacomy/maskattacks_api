@@ -1,6 +1,6 @@
 [
   {
-    "model": "maskattaks.model.Provider",
+    "model": "maskattacks.model.Provider",
     "records": [
       {
         "id": 1000,
@@ -15,7 +15,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.Customer",
+    "model": "maskattacks.model.Customer",
     "records": [
       {
         "id": 1000,
@@ -25,7 +25,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.Transporter",
+    "model": "maskattacks.model.Transporter",
     "records": [
       {
         "id": 1000,
@@ -38,7 +38,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.Manufacturor",
+    "model": "maskattacks.model.Manufacturor",
     "records": [
       {
         "id": 1000,
@@ -59,7 +59,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.Address",
+    "model": "maskattacks.model.Address",
     "records": [
       {
         "id": 1000,
@@ -112,7 +112,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.Organisation",
+    "model": "maskattacks.model.Organisation",
     "records": [
       {
         "id": 1000,
@@ -183,7 +183,7 @@
     ]
   },
   {
-    "model": "maskattaks.model.User",
+    "model": "maskattacks.model.User",
     "records": [
       {
         "id": 1000,

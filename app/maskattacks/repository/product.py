@@ -2,9 +2,9 @@ import constant
 
 from sqlalchemy import *
 
-from maskattaks.model.product import *
-from maskattaks.model.orga import Organisation
-from maskattaks.util.validator import get_error_messages
+from maskattacks.model.product import *
+from maskattacks.model.orga import Organisation
+from maskattacks.util.validator import get_error_messages
 
 
 class ProductException(Exception):

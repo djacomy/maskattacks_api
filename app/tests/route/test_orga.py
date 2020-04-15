@@ -1,4 +1,4 @@
-from maskattaks.repository.orga import get_organisation
+from maskattacks.repository.orga import get_organisation
 from tests.utils.mixins import BaseTest, BaseAuthMixin
 
 

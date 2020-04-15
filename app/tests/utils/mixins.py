@@ -4,7 +4,7 @@ import config
 
 from flask_fixtures import FixturesMixin
 
-from maskattaks.model.abc import db
+from maskattacks.model.abc import db
 from server import server
 
 server.config['TESTING'] = True

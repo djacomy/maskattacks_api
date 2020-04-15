@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
-from maskattaks.model.abc import db, ma
+from maskattacks.model.abc import db, ma
 
 
 def create_app(config_obj):
@@ -19,9 +19,9 @@ def create_app(config_obj):
         resources={r"/*": {"origins": "*"}},
         headers=['Content-Type', 'X-Requested-With', 'Authorization']
     )
-    from maskattaks.route.api import api_blueprint
+    from maskattacks.route.api import api_blueprint
     app.register_blueprint(api_blueprint, url_prefix="/api")
 
-    from maskattaks.route.common import common_blueprint
+    from maskattacks.route.common import common_blueprint
     app.register_blueprint(common_blueprint, url_prefix="/")
     return app

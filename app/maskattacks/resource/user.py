@@ -5,10 +5,10 @@ from flask_jwt_extended import create_access_token, jwt_required
 from flask_restful import  Resource
 from flask_restful_swagger import swagger
 
-from maskattaks.serializer.user import (SignupRequestSerializer, SignupResponseSerializer,
-                             SigninRequestSerializer, SigninResponseSerializer)
+from maskattacks.serializer.user import (SignupRequestSerializer, SignupResponseSerializer,
+                                         SigninRequestSerializer, SigninResponseSerializer)
 
-from maskattaks.repository import user as user_repository
+from maskattacks.repository import user as user_repository
 
 
 from sqlalchemy.orm.exc import NoResultFound

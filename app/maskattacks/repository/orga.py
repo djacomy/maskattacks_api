@@ -1,6 +1,6 @@
 from copy import deepcopy
-from maskattaks.model.user import *
-from maskattaks.model.orga import *
+from maskattacks.model.user import *
+from maskattacks.model.orga import *
 
 """
             "name": "Hôpital du Paradis",

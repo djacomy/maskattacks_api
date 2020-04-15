@@ -1,11 +1,11 @@
 import constant
 
-from maskattaks.serializer.orga import (AddressSerializer, UserSerializer, OrganisationSerializer,
-                                         TransporterSerializer,  OtherSerializer,
+from maskattacks.serializer.orga import (AddressSerializer, UserSerializer, OrganisationSerializer,
+                                         TransporterSerializer, OtherSerializer,
                                          ManufactorSerializer, CapacitySerializer, RangeSerializer)
 
-from maskattaks.repository import reference as ref_repository
-from maskattaks.util.validator import get_error_messages
+from maskattacks.repository import reference as ref_repository
+from maskattacks.util.validator import get_error_messages
 
 ref_fields = {"role": "orga_role", "status": "orga_status",
               "availability": "orga_availability"}

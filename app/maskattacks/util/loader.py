@@ -3,7 +3,7 @@ import os
 import importlib
 
 from config import DATA_DIR
-from maskattaks.model.orga import ReferenceType, Reference
+from maskattacks.model.orga import ReferenceType, Reference
 
 
 def dump_fixtures(model):

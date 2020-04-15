@@ -5,8 +5,8 @@ from flask import current_app
 from flask_script import Command
 from flask_fixtures import load_fixtures, loaders
 
-from maskattaks.model import db
-from maskattaks.util.loader import import_references, dump_fixtures
+from maskattacks.model import db
+from maskattacks.util.loader import import_references, dump_fixtures
 
 
 class ImportReferenceCommand(Command):

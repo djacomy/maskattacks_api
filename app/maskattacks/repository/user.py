@@ -1,4 +1,4 @@
-from maskattaks.model.user import User
+from maskattacks.model.user import User
 
 
 def find_users():

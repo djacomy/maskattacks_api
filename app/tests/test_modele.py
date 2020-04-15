@@ -1,8 +1,8 @@
 import unittest
 
-from maskattaks.util.loader import import_references
-from maskattaks.repository import reference as ref_repo
-from maskattaks.model.orga import Reference, ReferenceType
+from maskattacks.util.loader import import_references
+from maskattacks.repository import reference as ref_repo
+from maskattacks.model.orga import Reference, ReferenceType
 from tests.utils.mixins import BaseTest
 
 

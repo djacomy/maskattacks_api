@@ -1,10 +1,10 @@
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from maskattaks.commands.fixture import DumpCommand, ImportReferenceCommand, LoadFixturesCommand
+from maskattacks.commands.fixture import DumpCommand, ImportReferenceCommand, LoadFixturesCommand
 
 
 import config
-from maskattaks.model.abc import db
+from maskattacks.model.abc import db
 from app import create_app
 
 app = create_app(config)

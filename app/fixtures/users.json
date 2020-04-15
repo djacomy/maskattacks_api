@@ -1,6 +1,6 @@
 [
   {
-    "model": "maskattaks.model.User",
+    "model": "maskattacks.model.User",
     "records": [
       {
         "email": "joe@example.fr",
