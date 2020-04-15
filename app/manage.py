@@ -1,6 +1,6 @@
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from maskattacks.commands.fixture import DumpCommand, ImportReferenceCommand, LoadFixturesCommand
+from commands.fixture import DumpCommand, ImportReferenceCommand, LoadFixturesCommand
 
 
 import config
