@@ -189,8 +189,10 @@ class TestDeliveryItem(BaseTest):
         obj1 = [it for it in product_repo.count_all_stocks_by_reference_and_type().items]
         self.assertEqual(obj1, [('MEFP2+', product_repo.ProductType.kit, 10)])
         obj2 = [it for it in product_repo.count_all_delivery_by_reference_and_type().items]
-        self.assertEqual(obj2, [('MEFP2+', 'Couturier 1', product_repo.ProductType.kit, 40),
-                                ('MTOILE', "Couturier 2", product_repo.ProductType.kit, 120)])
+        self.assertEqual(obj2, [('MTOILE', "Couturier 2", product_repo.ProductType.kit,
+                                  product_repo.StatusType.submitted, 120),
+                                ('MEFP2+', 'Couturier 1', product_repo.ProductType.kit,
+                                 product_repo.StatusType.submitted, 40)])
 
     def test_create_final_delivery_stock(self):
         obj = product_repo.get_product_reference_by_reference("MEFP2+")
@@ -200,8 +202,10 @@ class TestDeliveryItem(BaseTest):
         obj1 = [it for it in product_repo.count_all_stocks_by_reference_and_type().items]
         self.assertEqual(obj1, [('MEFP2+', product_repo.ProductType.kit, 50)])
         obj2 = [it for it in product_repo.count_all_delivery_by_reference_and_type().items]
-        self.assertEqual(obj2, [('MEFP2+', 'Couturier 1', product_repo.ProductType.final, 40),
-                                ('MTOILE', "Couturier 2", product_repo.ProductType.kit, 120)
+        self.assertEqual(obj2, [('MTOILE', "Couturier 2", product_repo.ProductType.kit,
+                                 product_repo.StatusType.submitted, 120),
+                                ('MEFP2+', 'Couturier 1', product_repo.ProductType.final,
+                                 product_repo.StatusType.submitted, 40)
                                 ])
 
     def test_create_delivery_batch(self):

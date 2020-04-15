@@ -152,6 +152,17 @@ class DeliveryItem(db.Model, BaseModel):
                            secondaryjoin=('DeliveryItemBatch.batch_id == Batch.id'),
                            )
 
+    def to_json(self):
+        return {
+            "reference": self.product.reference,
+            "deliveries": [{
+                "type": ProductType.get_name(self.type),
+                "status": StatusType.get_name(self.status),
+                "manufactor": self.manufactor.name,
+                "count": self.count
+            }]
+        }
+
 
 class Batch(db.Model, BaseModel):
     __tablename__ = 'product_batch'

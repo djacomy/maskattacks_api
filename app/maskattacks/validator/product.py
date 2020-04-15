@@ -24,3 +24,10 @@ class ProductEquivalenceList(Schema):
 class StockCreationRequest(Schema):
     reference = fields.String(required=True)
     count = fields.Integer(required=True)
+
+
+class DeliveryItemCreationRequest(Schema):
+    reference = fields.String(required=True)
+    manufactor_vid = fields.Integer(required=True)
+    kit = fields.Integer(required=True,  validate=validate.OneOf([1, 0]), default=1)
+    count = fields.Integer(required=True)

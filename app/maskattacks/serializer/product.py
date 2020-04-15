@@ -80,3 +80,60 @@ class StockCreationRequestSerializer:
     required = ['type', "reference", 'count']
 
 
+@swagger.model
+class DeliveryItemCreationSerializer:
+    """
+    build: 1 or 0
+    """
+    resource_fields = {
+        'reference': fields.String,
+        'manufactor': fields.String,
+        'kit': fields.Integer,
+        'count': fields.Integer
+    }
+    required = ["reference", "count"]
+
+@swagger.model
+class DeliveryItemResponseSerializer:
+    resource_fields = {
+        'reference': fields.String,
+        'manufactor': fields.String,
+        'type': fields.String,
+        'count': fields.Integer
+    }
+    required = ["reference", "count"]
+
+
+@swagger.model
+@swagger.nested(results=DeliveryItemResponseSerializer.__name__)
+class DeliveryItemListResponseSerializer:
+    resource_fields = {
+        'total': fields.Integer,
+        'page': fields.Integer,
+        'size': fields.Integer,
+        'results': fields.List(fields.Nested(DeliveryItemResponseSerializer.resource_fields)),
+    }
+    required = ["reference", "manufactor", "type", "count"]
+
+
+@swagger.model
+class DeliveryItemUnitSerializer:
+    resource_fields = {
+    'type': fields.String,
+        'manufactor': fields.String,
+        'count': fields.Integer
+    }
+    required = ["reference", "count"]
+
+
+@swagger.model
+@swagger.nested(deliveries=DeliveryItemUnitSerializer.__name__)
+class DeliveryItemRefResponseSerializer:
+    resource_fields = {
+        'reference': fields.String,
+        'deliveries': fields.List(fields.Nested(DeliveryItemUnitSerializer.resource_fields)),
+
+    }
+    required = ["reference", "deliveries"]
+
+

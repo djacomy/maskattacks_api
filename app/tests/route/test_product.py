@@ -149,5 +149,93 @@ class TestStock(BaseTest, BaseAuthMixin):
         ]})
 
 
+class TestDeliveryItem(BaseTest, BaseAuthMixin):
+    maxDiff = None
+    fixtures = ["refs.json", "users.json", "orga.json", 'product.json', 'stock2.json']
+
+    def test_get_deliveyitems(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/deliveryitems'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("results", response.json)
+        self.assertEqual(response.json,
+                         {'total': 3, 'page': 1, 'size': 10,
+                          'results': [{'reference': 'MTOILE', 'manufactor': 'Couturier 2',
+                                       'type': 'kit', 'status': 'submitted', 'count': 120},
+                                      {'reference': 'MEFP2', 'manufactor': 'Couturier 1',
+                                       'type': 'final', 'status': 'submitted', 'count': 115},
+                                      {'reference': 'MEFP2', 'manufactor': 'Couturier 1',
+                                       'type': 'kit', 'status': 'submitted', 'count': 120}]})
+
+    def test_create_kit_delivery(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/deliveryitems'
+        response = self.post(url, token, {"reference": "MEFP2+",
+                                          "manufactor_vid": 6,
+                                          "kit": 1,
+                                          "count": 23})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json,
+                         {'reference': 'MEFP2+',
+                          'deliveries': [{'type': 'kit',
+                                          'status': 'submitted',
+                                          'manufactor': 'Couturier 1',
+                                          'count': 23}]})
+        obj = prod_repo.count_delivery_by_reference_and_type("MEFP2+", prod_repo.ProductType.kit)
+        self.assertEqual(23, obj)
+
+    def test_create_final_delivery(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/deliveryitems'
+        response = self.post(url, token, {"reference": "MEFP2+",
+                                          "manufactor_vid": 6,
+                                          "kit": 0,
+                                          "count": 23})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json,
+                         {'reference': 'MEFP2+',
+                          'deliveries': [{'type': 'final',
+                                          'status': 'submitted',
+                                          'manufactor': 'Couturier 1',
+                                          'count': 23}]})
+        obj = prod_repo.count_delivery_by_reference_and_type("MEFP2+", prod_repo.ProductType.final)
+        self.assertEqual(23, obj)
+
+    def test_create_kit_delivery_bad_manufactor(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/deliveryitems'
+        response = self.post(url, token, {"reference": "MEFP2",
+                                          "manufactor_vid": 4,
+                                          "kit": 0,
+                                          "count": 100})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json,
+                         {'errors': [{'code': 'NOT_A_MANUFACTOR', 'message': '4 is not a manufactor'}]})
+
+    def test_get_deliveryitem(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/deliveryitems/MEFP2'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {'reference': 'MEFP2',
+                                         'deliveries': [
+                                             {'manufactor': 'Couturier 1', 'type':'kit',
+                                              'status': 'submitted', 'count': 120},
+                                             {'manufactor': 'Couturier 1', 'type': 'final',
+                                              'status': 'submitted', 'count': 115}
+                                         ]})
+
+    def test_get_unknown_deliveryitem(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/deliveryitems/SAXXY'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json, {'errors': [
+            {"code": "UNKNOWN_RESOURCE", "message": "Unknown ressource"}
+        ]})
+
+
 if __name__ == '__main__':
     unittest.main()

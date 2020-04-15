@@ -46,10 +46,10 @@ def count_all_delivery_by_reference_and_type(page=1, limit=10):
     :param limit:
     :return: Iterator
     """
-    return db.session.query(Product.reference, Organisation.name,  DeliveryItem.type, func.sum(DeliveryItem.count))\
+    return db.session.query(Product.reference, Organisation.name,  DeliveryItem.type, DeliveryItem.status, func.sum(DeliveryItem.count))\
         .join(DeliveryItem, DeliveryItem.product_id == Product.id)\
         .join(Organisation, Organisation.id == DeliveryItem.manufactor_id)\
-        .group_by(Product.reference, Organisation.name, DeliveryItem.type)\
+        .group_by(Product.reference, Organisation.name, DeliveryItem.type, DeliveryItem.status)\
         .paginate(page, limit)
 
 
@@ -86,6 +86,33 @@ def get_stock_by_reference(reference):
         "type": ProductType.get_name(obj[1]),
         "count": obj[2]
     }
+
+
+def get_deliveryitem_by_reference(reference):
+    obj = db.session.query(Product.reference,  DeliveryItem.type, DeliveryItem.status, Organisation.name, func.sum(DeliveryItem.count))\
+        .join(DeliveryItem, DeliveryItem.product_id == Product.id) \
+        .join(Organisation, DeliveryItem.manufactor_id == Organisation.id) \
+        .filter(Product.reference == reference).group_by(Product.reference, DeliveryItem.type, DeliveryItem.status,Organisation.name).all()
+    if not obj:
+        return
+
+    return {
+        "reference": reference,
+        "deliveries": [{"type": ProductType.get_name(item[1]),
+                        "status":  StatusType.get_name(item[2]),
+                        "manufactor": item[3],
+                        "count": item[4]} for item in obj]
+    }
+
+
+def count_delivery_by_reference_and_type(reference, delivery_type):
+    obj = db.session.query(Product.reference, func.sum(DeliveryItem.count))\
+        .join(DeliveryItem, DeliveryItem.product_id == Product.id)\
+        .filter(and_(Product.reference == reference, DeliveryItem.type == delivery_type ))\
+        .group_by(Product.reference).first()
+    if obj is None:
+        return 0
+    return obj[1]
 
 
 def list_stocks_by_reference(reference):
