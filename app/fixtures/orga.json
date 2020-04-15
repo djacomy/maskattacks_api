@@ -1,0 +1,250 @@
+[
+  {
+    "model": "maskattaks.model.Provider",
+    "records": [
+      {
+        "id": 1000,
+        "type": 33,
+        "subtype": 36
+      },
+      {
+        "id": 1001,
+        "type": 33,
+        "subtype": 37
+      }
+    ]
+  },
+  {
+    "model": "maskattaks.model.Customer",
+    "records": [
+      {
+        "id": 1000,
+        "type": 39,
+        "subtype": 45
+      }
+    ]
+  },
+  {
+    "model": "maskattaks.model.Transporter",
+    "records": [
+      {
+        "id": 1000,
+        "type": 25,
+        "capacity_type": 28,
+        "capacity_value": 26,
+        "range_type": 31,
+        "range_value": 2
+      }
+    ]
+  },
+  {
+    "model": "maskattaks.model.Manufacturor",
+    "records": [
+      {
+        "id": 1000,
+        "type": 11,
+        "capacity": 13,
+        "skill_level": 15,
+        "quality_need": 18,
+        "contract_type": 23
+      },
+      {
+        "id": 1001,
+        "type": 12,
+        "capacity": 14,
+        "skill_level": 16,
+        "quality_need": 19,
+        "contract_type": 24
+      }
+    ]
+  },
+  {
+    "model": "maskattaks.model.Address",
+    "records": [
+      {
+        "id": 1000,
+        "street": "30 rue des visiteurs",
+        "zipcode": "54344",
+        "city": "covid-19",
+        "lon": null,
+        "lat": null
+      },
+      {
+        "id": 1001,
+        "street": "30 rue des couturiers",
+        "zipcode": "54345",
+        "city": "covid-19",
+        "lon": null,
+        "lat": null
+      },
+      {
+        "id": 1002,
+        "street": "30 rue clients",
+        "zipcode": "96344",
+        "city": "Chanceux",
+        "lon": null,
+        "lat": null
+      },
+      {
+        "id": 1003,
+        "street": "30 rue transporter",
+        "zipcode": "34344",
+        "city": "Sauvequipeut",
+        "lon": null,
+        "lat": null
+      },
+      {
+        "id": 1004,
+        "street": "30 rue du couturier",
+        "zipcode": "75344",
+        "city": "paris",
+        "lon": null,
+        "lat": null
+      },
+      {
+        "id": 1005,
+        "street": "30 rue de l'imprimante 3D",
+        "zipcode": "75344",
+        "city": "paris",
+        "lon": null,
+        "lat": null
+      }
+    ]
+  },
+  {
+    "model": "maskattaks.model.Organisation",
+    "records": [
+      {
+        "id": 1000,
+        "vid": 2,
+        "name": "Entreprise de textile",
+        "role": 10,
+        "status": 1,
+        "availability": 4,
+        "address_id": 1000,
+        "object_type": "Provider",
+        "object_id": 1000
+      },
+      {
+        "id": 1001,
+        "vid": 4,
+        "name": "Entreprise de textile 2",
+        "role": 10,
+        "status": 2,
+        "availability": 5,
+        "address_id": 1001,
+        "object_type": "Provider",
+        "object_id": 1001
+      },
+      {
+        "id": 1002,
+        "vid": 3,
+        "name": "Customer 1",
+        "role": 9,
+        "status": 1,
+        "availability": 4,
+        "address_id": 1002,
+        "object_type": "Customer",
+        "object_id": 1000
+      },
+      {
+        "id": 1003,
+        "vid": 5,
+        "name": "Transporter 1",
+        "role": 9,
+        "status": 2,
+        "availability": 5,
+        "address_id": 1003,
+        "object_type": "Transporter",
+        "object_id": 1000
+      },
+      {
+        "id": 1004,
+        "vid": 6,
+        "name": "Couturier 1",
+        "role": 7,
+        "status": 2,
+        "availability": 5,
+        "address_id": 1004,
+        "object_type": "Manufacturor",
+        "object_id": 1000
+      },
+      {
+        "id": 1005,
+        "vid": 7,
+        "name": "Couturier 2",
+        "role": 7,
+        "status": 2,
+        "availability": 5,
+        "address_id": 1005,
+        "object_type": "Manufacturor",
+        "object_id": 1001
+      }
+    ]
+  },
+  {
+    "model": "maskattaks.model.User",
+    "records": [
+      {
+        "id": 1000,
+        "email": "rom@example.fr",
+        "firstname": "Romain",
+        "lastname": "Le Tartempion",
+        "password": "romainletartampion",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": 1000
+      },
+      {
+        "id": 1001,
+        "email": "text@example.fr",
+        "firstname": "Tati",
+        "lastname": "Danielle",
+        "password": "tatidanielle",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": 1001
+      },
+      {
+        "id": 1002,
+        "email": "customer1@example.fr",
+        "firstname": "Custo",
+        "lastname": "Meur1",
+        "password": "customer1",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": 1002
+      },
+      {
+        "id": 1003,
+        "email": "transport1@example.fr",
+        "firstname": "Trans",
+        "lastname": "Porter1",
+        "password": "transporter1",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": 1003
+      },
+      {
+        "id": 1004,
+        "email": "couturier1@example.fr",
+        "firstname": "Janine",
+        "lastname": "Turier1",
+        "password": "couturier1",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": 1004
+      },
+      {
+        "id": 1005,
+        "email": "couturier2@example.fr",
+        "firstname": "Robert",
+        "lastname": "Tarjina",
+        "password": "couturier2",
+        "is_admin": false,
+        "is_manager": false,
+        "organization_id": 1005
+      }
+    ]
+  }
+]

@@ -32,6 +32,8 @@ docker-compose run --rm server pip install -r requirements.txt --user --upgrade
 docker-compose up -d server
 ```
 
+The diferfent api routes should be displayed on `localhost:$API_PORT` where `API_PORT` is set in the `.env` file.
+
 ## Accessing containers
 
 Require Docker >= 1.3
