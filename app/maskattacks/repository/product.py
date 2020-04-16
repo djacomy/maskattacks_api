@@ -1,4 +1,5 @@
 import constant
+from uuid import uuid4
 
 from sqlalchemy import *
 
@@ -279,19 +280,15 @@ def generate_batch_from_delivery_item(id, batch_size):
     count = obj.count
     for i in range(0, int(obj.count / batch_size)):
         if obj.type == ProductType.kit:
-            batch = Batch(count=batch_size, destination=obj.manufactor)
+            batch = Batch(count=batch_size, destination=obj.manufactor, deliveryitem=obj, reference=uuid4())
         else:
-            batch = Batch(count=batch_size)
+            batch = Batch(count=batch_size, deliveryitem=obj, reference=uuid4())
         batch.save()
-        obj.batches.append(batch)
         count -= batch_size
 
     if count > 0:
         if obj.type == ProductType.kit:
-            batch = Batch(count=count, destination=obj.manufactor)
+            batch = Batch(count=count, destination=obj.manufactor, deliveryitem=obj, reference=uuid4())
         else:
-            batch = Batch(count=count)
+            batch = Batch(count=count, deliveryitem=obj, reference=uuid4())
         batch.save()
-        obj.batches.append(batch)
-    obj.save()
-

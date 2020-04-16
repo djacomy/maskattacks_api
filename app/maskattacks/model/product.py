@@ -109,20 +109,10 @@ class Stock(db.Model, BaseModel):
         }
 
 
-class DeliveryItemBatch(db.Model, BaseModel):
-    __tablename__ = 'product_deliveryitem_batch'
-
-    batch_id = db.Column(db.Integer, db.ForeignKey('product_batch.id'), primary_key=True)
-    deliveryitem_id = db.Column(db.Integer, db.ForeignKey('product_deliveryitem.id'), primary_key=True)
-
-    deliveryitem = relationship("DeliveryItem", foreign_keys=[deliveryitem_id], backref="deliveryitem_items")
-    batch = relationship("Batch", foreign_keys=[batch_id], backref="batch_items")
-
-
 class DeliveryItem(db.Model, BaseModel):
     __tablename__ = 'product_deliveryitem'
 
-    to_json_filter = ('id',  )
+    to_json_filter = ('id',)
 
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -147,10 +137,6 @@ class DeliveryItem(db.Model, BaseModel):
 
     count = db.Column(db.Integer, default=0, nullable=False)
 
-    batches = relationship('Batch', secondary=lambda: DeliveryItemBatch.__table__,
-                           primaryjoin=(DeliveryItemBatch.deliveryitem_id == id),
-                           secondaryjoin=('DeliveryItemBatch.batch_id == Batch.id'),
-                           )
 
     def to_json(self):
         return {
@@ -172,7 +158,7 @@ class Batch(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-
+    reference = db.Column(db.String(40), nullable=False)
     count = db.Column(db.Integer, default=0, nullable=False)
 
     status = db.Column(
@@ -180,6 +166,9 @@ class Batch(db.Model, BaseModel):
         default=StatusType.submitted,
         nullable=False
     )
+
+    deliveritem_id = db.Column(db.Integer, db.ForeignKey("product_deliveryitem.id"), nullable=False)
+    deliveryitem = db.relationship(DeliveryItem, foreign_keys=[deliveritem_id], backref="batches")
 
     transporter_id = db.Column(db.Integer, db.ForeignKey("orga_organization.id"), nullable=True)
     transporter = db.relationship(Organisation, foreign_keys=[transporter_id])
