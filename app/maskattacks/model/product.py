@@ -137,7 +137,6 @@ class DeliveryItem(db.Model, BaseModel):
 
     count = db.Column(db.Integer, default=0, nullable=False)
 
-
     def to_json(self):
         return {
             "reference": self.product.reference,

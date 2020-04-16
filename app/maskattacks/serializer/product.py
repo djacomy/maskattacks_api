@@ -81,19 +81,6 @@ class StockCreationRequestSerializer:
 
 
 @swagger.model
-class DeliveryItemCreationSerializer:
-    """
-    build: 1 or 0
-    """
-    resource_fields = {
-        'reference': fields.String,
-        'manufactor': fields.String,
-        'kit': fields.Integer,
-        'count': fields.Integer
-    }
-    required = ["reference", "count"]
-
-@swagger.model
 class DeliveryItemResponseSerializer:
     resource_fields = {
         'reference': fields.String,

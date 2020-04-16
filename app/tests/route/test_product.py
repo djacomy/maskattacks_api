@@ -173,15 +173,9 @@ class TestDeliveryItem(BaseTest, BaseAuthMixin):
         url = 'api/deliveryitems'
         response = self.post(url, token, {"reference": "MEFP2+",
                                           "manufactor_vid": 6,
-                                          "kit": 1,
+                                          "delivery_type": "kit",
                                           "count": 23})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json,
-                         {'reference': 'MEFP2+',
-                          'deliveries': [{'type': 'kit',
-                                          'status': 'submitted',
-                                          'manufactor': 'Couturier 1',
-                                          'count': 23}]})
+        self.assertEqual(response.status_code, 204)
         obj = prod_repo.count_delivery_by_reference_and_type("MEFP2+", prod_repo.ProductType.kit)
         self.assertEqual(23, obj)
 
@@ -190,16 +184,10 @@ class TestDeliveryItem(BaseTest, BaseAuthMixin):
         url = 'api/deliveryitems'
         response = self.post(url, token, {"reference": "MEFP2+",
                                           "manufactor_vid": 6,
-                                          "kit": 0,
+                                          "delivery_type": "final",
                                           "count": 23})
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json,
-                         {'reference': 'MEFP2+',
-                          'deliveries': [{'type': 'final',
-                                          'status': 'submitted',
-                                          'manufactor': 'Couturier 1',
-                                          'count': 23}]})
+        self.assertEqual(response.status_code, 204)
         obj = prod_repo.count_delivery_by_reference_and_type("MEFP2+", prod_repo.ProductType.final)
         self.assertEqual(23, obj)
 
@@ -208,7 +196,7 @@ class TestDeliveryItem(BaseTest, BaseAuthMixin):
         url = 'api/deliveryitems'
         response = self.post(url, token, {"reference": "MEFP2",
                                           "manufactor_vid": 4,
-                                          "kit": 0,
+                                          "delivery_type": "final",
                                           "count": 100})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json,

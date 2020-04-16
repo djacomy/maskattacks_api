@@ -14,7 +14,7 @@ from maskattacks.serializer.product import (ProductListResponseSerializer, Produ
                                             StockListResponseSerializer, StockCreationRequestSerializer,
                                             StockResponseSerializer, DeliveryItemResponseSerializer,
                                             DeliveryItemListResponseSerializer, DeliveryItemRefResponseSerializer,
-                                            DeliveryItemCreationSerializer, BatchListResponseSerializer,
+                                            BatchListResponseSerializer,
                                             BatchResponseSerializer)
 
 from maskattacks.validator import orga as orga_validator, product as product_validator
@@ -103,7 +103,7 @@ class ProductsApi(Resource):
         params = request.json
         errors = product_validator.ProductCreationRequest().validate(params, many=False)
         if errors:
-            return {"errors": [{"code": "BAD_INPUT", "message": "\n".join(errors)}]}, 400
+            return {"errors": [{"code": f"BAD_PARAM_{k.upper()}", "message": "\n".join(v)} for k, v in errors.items()]}, 400
 
         product_type = params.get("product_type")
         ref = params.get("reference")
@@ -297,7 +297,7 @@ class StocksApi(Resource):
         params = request.json
         errors = product_validator.StockCreationRequest().validate(params, many=False)
         if errors:
-            return {"errors": [{"code": "BAD_INPUT", "message": "\n".join(errors)}]}, 400
+            return {"errors": [{"code": f"BAD_PARAM_{k.upper()}", "message": "\n".join(v)} for k, v in errors.items()]}, 400
 
         product = product_repository.get_product_reference_by_reference(params.get('reference'))
         if product is None:
@@ -394,7 +394,6 @@ class DeliveryItemsApi(Resource):
 
     @swagger.operation(
         notes='Delivery item creation',
-        responseClass=DeliveryItemCreationSerializer.__name__,
         nickname='deliveryitem-creation',
         parameters=[
             {
@@ -414,8 +413,8 @@ class DeliveryItemsApi(Resource):
                 "paramType": "body"
             },
             {
-                "name": "kit",
-                "description": "1 if delivering a kit,  0 if restitution the final product.",
+                "name": "delivery_type",
+                "description": "enum (kit or final)",
                 "required": True,
                 "allowMultiple": False,
                 "dataType": "integer",
@@ -432,7 +431,7 @@ class DeliveryItemsApi(Resource):
         ],
         responseMessages=[
             {
-                "code": 201,
+                "code": 204,
                 "message": "delivery item inserted."
             },
             {
@@ -449,7 +448,7 @@ class DeliveryItemsApi(Resource):
         params = request.json
         errors = product_validator.DeliveryItemCreationRequest().validate(params, many=False)
         if errors:
-            return {"errors": [{"code": "BAD_INPUT", "message": "\n".join(errors)}]}, 400
+            return {"errors": [{"code": f"BAD_PARAM_{k.upper()}", "message": "\n".join(v)} for k, v in errors.items()]}, 400
 
         product = product_repository.get_product_reference_by_reference(params.get('reference'))
         if product is None:
@@ -476,11 +475,11 @@ class DeliveryItemsApi(Resource):
             except product_repository.ProductException as exc:
                 return {"errors": exc.details}, 400
 
-        func = product_repository.create_kit_delivery_stock if params.get("kit") == 1 \
+        func = product_repository.create_kit_delivery_stock if params.get("delivery_type") == "kit" \
             else product_repository.create_final_delivery_stock
-        obj = func(product, params.get("count"), manufactor)
+        func(product, params.get("count"), manufactor)
 
-        return obj.to_json(), 200
+        return {}, 204
 
 
 class DeliveryItemApi(Resource):
