@@ -51,7 +51,7 @@ class ProductEquivalence(db.Model, BaseModel):
 class Product(db.Model, BaseModel):
     __tablename__ = 'product_product'
 
-    to_json_filter = ('materials', 'material', "created_at",)
+    to_json_filter = ("id", 'materials', 'material', "created_at",)
     print_filter = ('materials', 'material')
 
     id = db.Column(db.Integer, primary_key=True)

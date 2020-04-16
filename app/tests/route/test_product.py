@@ -17,18 +17,18 @@ class TestProduct(BaseTest, BaseAuthMixin):
         self.assertEqual(2, response.json["page"])
         self.assertEqual(3, response.json["size"])
         self.assertEqual(response.json["results"],
-                         [{'id': 1003, 'reference': 'MEFP2', 'type': 'final',
+                         [{'reference': 'MEFP2', 'type': 'final',
                            'libelle': 'Mask efp2',
-                           'materials': [{'id': 1000, 'reference': 'SAXXXY', 'type': "materials",
+                           'materials': [{'reference': 'SAXXXY', 'type': "materials",
                                           'libelle': 'Tissus de 50m2', 'count': 5},
-                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                         {'reference': 'SAXXYY', 'type': "materials",
                                           'libelle': 'Elastique pour mask', 'count': 5}]},
-                          {'id': 1004, 'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
+                          {'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
                            'materials': []},
-                          {'id': 1005, 'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
-                           'materials': [{'id': 1001, 'reference': 'SAXXXZ',
+                          {'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
+                           'materials': [{'reference': 'SAXXXZ',
                                           'type': "materials", 'libelle': 'Tissus de 30m2', 'count': 4},
-                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                         {'reference': 'SAXXYY', 'type': "materials",
                                           'libelle': 'Elastique pour mask', 'count': 5}
                                          ]
                            }
@@ -42,7 +42,7 @@ class TestProduct(BaseTest, BaseAuthMixin):
                                           "libelle":"Mon super produit"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json,
-                         {'id': 1, 'reference': 'ABCDE',
+                         {'reference': 'ABCDE',
                           'type': 'materials',
                           'libelle': 'Mon super produit'})
 
@@ -52,7 +52,7 @@ class TestProduct(BaseTest, BaseAuthMixin):
         response = self.get(url, token)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json,
-                         {'id': 1000, 'reference': 'SAXXXY',
+                         {'reference': 'SAXXXY',
                           'type': 'materials',
                           'libelle': 'Tissus de 50m2'})
 
@@ -74,15 +74,12 @@ class TestProduct(BaseTest, BaseAuthMixin):
                                                        {"reference": "SAXXYY", "count": 5}]})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json,
-                         {'id': 1004,
-                          'libelle': 'Mask toile',
+                         {'libelle': 'Mask toile',
                           'materials': [{'count': 4,
-                                         'id': 1001,
                                          'libelle': 'Tissus de 30m2',
                                          'reference': 'SAXXXZ',
                                          'type': 'materials'},
                                         {'count': 5,
-                                         'id': 1002,
                                          'libelle': 'Elastique pour mask',
                                          'reference': 'SAXXYY',
                                          'type': 'materials'}],

@@ -61,24 +61,24 @@ class TestStock(BaseTest):
         res = product_repo.list_product_references(1)
         obj = [item.to_json() for item in res.items]
         self.assertEqual(obj,
-                         [{'id': 1000, 'reference': 'SAXXXY', 'type': 'materials',
+                         [{'reference': 'SAXXXY', 'type': 'materials',
                            'libelle': 'Tissus de 50m2'},
-                          {'id': 1001, 'reference': 'SAXXXZ', 'type': 'materials',
+                          {'reference': 'SAXXXZ', 'type': 'materials',
                            'libelle': 'Tissus de 30m2'},
-                          {'id': 1002, 'reference': 'SAXXYY', 'type': 'materials',
+                          {'reference': 'SAXXYY', 'type': 'materials',
                            'libelle': 'Elastique pour mask'},
-                          {'id': 1003, 'reference': 'MEFP2', 'type': 'final',
+                          {'reference': 'MEFP2', 'type': 'final',
                            'libelle': 'Mask efp2',
-                           'materials': [{'id': 1000, 'reference': 'SAXXXY', 'type': "materials",
+                           'materials': [{'reference': 'SAXXXY', 'type': "materials",
                                           'libelle': 'Tissus de 50m2', 'count': 5},
-                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                         {'reference': 'SAXXYY', 'type': "materials",
                                           'libelle': 'Elastique pour mask', 'count': 5}]},
-                          {'id': 1004, 'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
+                          {'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
                            'materials': []},
-                          {'id': 1005, 'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
-                           'materials': [{'id': 1001, 'reference': 'SAXXXZ',
+                          {'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
+                           'materials': [{ 'reference': 'SAXXXZ',
                                           'type': "materials", 'libelle': 'Tissus de 30m2', 'count': 4},
-                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                         {'reference': 'SAXXYY', 'type': "materials",
                                           'libelle': 'Elastique pour mask', 'count': 5}
                                          ]
                            }
@@ -88,18 +88,18 @@ class TestStock(BaseTest):
         res = product_repo.list_product_references(2, 3)
         obj = [item.to_json() for item in res.items]
         self.assertEqual(obj,
-                         [{'id': 1003, 'reference': 'MEFP2', 'type': 'final',
+                         [{'reference': 'MEFP2', 'type': 'final',
                            'libelle': 'Mask efp2',
-                           'materials': [{'id': 1000, 'reference': 'SAXXXY', 'type': "materials",
+                           'materials': [{ 'reference': 'SAXXXY', 'type': "materials",
                                           'libelle': 'Tissus de 50m2', 'count': 5},
-                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                         { 'reference': 'SAXXYY', 'type': "materials",
                                           'libelle': 'Elastique pour mask', 'count': 5}]},
-                          {'id': 1004, 'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
+                          {'reference': 'MTOILE', 'type': 'final', 'libelle': 'Mask toile',
                            'materials': []},
-                          {'id': 1005, 'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
-                           'materials': [{'id': 1001, 'reference': 'SAXXXZ',
+                          {'reference': 'MEFP2+', 'type': 'final', 'libelle': 'Super Mask efp2',
+                           'materials': [{'reference': 'SAXXXZ',
                                           'type': "materials", 'libelle': 'Tissus de 30m2', 'count': 4},
-                                         {'id': 1002, 'reference': 'SAXXYY', 'type': "materials",
+                                         {'reference': 'SAXXYY', 'type': "materials",
                                           'libelle': 'Elastique pour mask', 'count': 5}
                                          ]
                            }

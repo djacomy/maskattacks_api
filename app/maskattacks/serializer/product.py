@@ -2,26 +2,25 @@ from flask_restful_swagger import swagger
 from flask_restful import fields
 
 
+@swagger.model
 class ProductEquivalenceSerializer:
     resource_fields = {
-        'id': fields.Integer,
         'reference': fields.String,
         'type': fields.String,
-        'count': fields.String()
+        'count': fields.Integer
     }
-    required = ['id', "reference"]
+    required = ["reference", 'type','count']
 
 
 @swagger.model
-@swagger.nested(organizations=ProductEquivalenceSerializer.__name__)
+@swagger.nested(materials=ProductEquivalenceSerializer.__name__)
 class ProductSerializer:
     resource_fields = {
-        'id': fields.Integer,
         'reference': fields.String,
         'type': fields.String,
-        'materials': fields.Nested(ProductEquivalenceSerializer.resource_fields)
+        'materials': fields.List(fields.Nested(ProductEquivalenceSerializer.resource_fields))
     }
-    required = ['id', "reference", 'type']
+    required = ["reference", 'type']
 
 
 @swagger.model
@@ -51,6 +50,7 @@ class ProductEquivalenceListRequestSerializer:
     resource_fields = {
         'materials': fields.List(fields.Nested(ProductEquivalenceRequesterializer.resource_fields)),
     }
+    required = ["materials"]
 
 
 @swagger.model
@@ -60,7 +60,7 @@ class StockResponseSerializer:
         'type': fields.String,
         'count': fields.Integer
     }
-    required = ["reference", "count"]
+    required = ["reference", "type", "count"]
 
 
 @swagger.model
@@ -75,11 +75,12 @@ class StockListResponseSerializer:
     }
     required = ['total', "page", 'size', 'results']
 
+
 @swagger.model
 class StockCreationRequestSerializer:
     resource_fields = {
-        'type': fields.String,
         'reference': fields.String,
+        'type': fields.String,
         'count': fields.Integer
     }
     required = ['type', "reference", 'count']
@@ -89,8 +90,8 @@ class StockCreationRequestSerializer:
 class DeliveryItemResponseSerializer:
     resource_fields = {
         'reference': fields.String,
-        'manufactor': fields.String,
         'type': fields.String,
+        'manufactor': fields.String,
         'count': fields.Integer
     }
     required = ["reference", "manufactor", "type", "count"]
@@ -149,7 +150,6 @@ class BatchResponseSerializer:
         'delivery_type': fields.String,
         'destination': fields.String,
         'transporter': fields.String,
-        'type': fields.String,
         'count': fields.Integer
     }
     required = ["reference", "status", "product_reference",  "delivery_type", "count"]
