@@ -12,6 +12,7 @@ NOT_ENOUGH_STOCK = "NOT_ENOUGH_STOCK"
 CANNOT_DELIVER_MATERIAL_PRODUCT = "CANNOT_DELIVER_MATERIAL_PRODUCT"
 NOT_A_MANUFACTOR = "NOT_A_MANUFACTOR"
 UNKNOWN_ORGANISATION = "UNKNOWN_ORGANISATION"
+DELIVERYITEM_ALREADY_EXPORTED = "DELIVERYITEM_ALREADY_EXPORTED"
 
 ERROR_MESSAGES = {
     PARAM_REQUIRED: "{} is required",
@@ -25,7 +26,8 @@ ERROR_MESSAGES = {
     NOT_ENOUGH_STOCK: "Not enough stock for reference {}",
     CANNOT_DELIVER_MATERIAL_PRODUCT: "Cannot deliver material product",
     NOT_A_MANUFACTOR: "{} is not a manufactor",
-    UNKNOWN_ORGANISATION: "{} is an unknown orgagnisation"
+    UNKNOWN_ORGANISATION: "{} is an unknown orgagnisation",
+    DELIVERYITEM_ALREADY_EXPORTED: "Delivery item {}-{} has been already exported."
 }
 
 

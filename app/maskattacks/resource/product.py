@@ -14,7 +14,8 @@ from maskattacks.serializer.product import (ProductListResponseSerializer, Produ
                                             StockListResponseSerializer, StockCreationRequestSerializer,
                                             StockResponseSerializer, DeliveryItemResponseSerializer,
                                             DeliveryItemListResponseSerializer, DeliveryItemRefResponseSerializer,
-                                            DeliveryItemCreationSerializer)
+                                            DeliveryItemCreationSerializer, BatchListResponseSerializer,
+                                            BatchResponseSerializer)
 
 from maskattacks.validator import orga as orga_validator, product as product_validator
 from maskattacks.util.validator import parse_params, get_error_messages
@@ -506,4 +507,151 @@ class DeliveryItemApi(Resource):
             return {"errors": [get_error_messages(constant.UNKNOWN_RESOURCE)]}, 404
         return obj, 200
 
+
+class BatchesApi(Resource):
+    method_decorators = [jwt_required]
+
+    @swagger.operation(
+        notes='List of batches',
+        responseClass=BatchListResponseSerializer.__name__,
+        nickname='batches-list',
+        parameters=[
+            {
+                "name": "page",
+                "description": "page number",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": "int",
+                "paramType": "body"
+            },
+            {
+                "name": "size",
+                "description": "number of items returned",
+                "required": False,
+                "default": 10,
+                "allowMultiple": False,
+                "dataType": "int",
+                "paramType": "body"
+            }
+        ],
+        responseMessages=[
+            {
+                "code": 200,
+                "message": "List of of Delivery Items."
+            }
+
+        ])
+    @parse_params(
+        {'name': 'page', 'type': int, "default": 1},
+        {'name': 'size', 'type': int, "default": 10},
+    )
+    def get(self, params):
+        obj = product_repository.list_all_batches(params.get("page"), params.get("size"))
+
+        def clean(it):
+            return {
+                "reference": it[0],
+                "status": product_repository.StatusType.get_name(it[2]),
+                "product_reference": it[5],
+                "delivery_type": product_repository.ProductType.get_name(it[4]),
+                "destination": it[1],
+                "transporter": it[6],
+                "count": it[3]
+            }
+        return {"total": obj.total,
+                "page": params.get("page"),
+                "size": params.get("size"),
+                "results": [clean(it) for it in obj.items]}, 200
+
+    @swagger.operation(
+        notes='Batch creation',
+        nickname='batches-creation',
+        parameters=[
+            {
+                "name": "reference",
+                "description": "Product reference",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": "string",
+                "paramType": "body"
+            },
+            {
+                "name": "delivery_type",
+                "description": "Enum (kit or final)",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": "integer",
+                "paramType": "body"
+            },
+            {
+                "name": " batch_size",
+                "description": "Batch size",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": "string",
+                "paramType": "body"
+            }
+        ],
+        responseMessages=[
+            {
+                "code": 204,
+                "message": "batches inserted"
+            },
+            {
+                "code": 400,
+                "message": "params errors."
+            },
+            {
+                "code": 404,
+                "message": "unknown delivery item reference."
+            }
+
+        ])
+    def post(self):
+
+        params = request.json
+        errors = product_validator.BatchCreationRequest().validate(params, many=False)
+        if errors:
+            return {"errors": [{"code": "BAD_INPUT", "message": "\n".join(errors)}]}, 400
+
+        deliveryitem = product_repository.get_deliveryitem_by_reference_and_type(params.get('reference'),
+                                                                                 params.get('delivery_type'))
+
+        if deliveryitem is None:
+            return {"errors": [get_error_messages(constant.UNKNOWN_RESOURCE)]}, 404
+
+        if len(deliveryitem.batches) > 0:
+            return {"errors": [get_error_messages(constant.DELIVERYITEM_ALREADY_EXPORTED,
+                                                  params.get('reference'),
+                                                  params.get('delivery_type')
+                                                  )]}, 400
+
+        product_repository.generate_batch_from_delivery_item(deliveryitem, params.get("batch_size"))
+
+        return {}, 204
+
+
+class BatchApi(Resource):
+    method_decorators = [jwt_required]
+
+    @swagger.operation(
+        notes='get a batch by batch reference',
+        responseClass=BatchResponseSerializer.__name__,
+        nickname='batch-get',
+        responseMessages=[
+            {
+                "code": 200,
+                "message": "Get batch by reference."
+            },
+            {
+                "code": 404,
+                "message": "Unknown resources."
+            }
+
+        ])
+    def get(self, reference):
+        obj = product_repository.get_batch_by_reference(reference)
+        if obj is None:
+            return {"errors": [get_error_messages(constant.UNKNOWN_RESOURCE)]}, 404
+        return obj.to_json(), 200
 

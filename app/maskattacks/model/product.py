@@ -167,8 +167,8 @@ class Batch(db.Model, BaseModel):
         nullable=False
     )
 
-    deliveritem_id = db.Column(db.Integer, db.ForeignKey("product_deliveryitem.id"), nullable=False)
-    deliveryitem = db.relationship(DeliveryItem, foreign_keys=[deliveritem_id], backref="batches")
+    deliveryitem_id = db.Column(db.Integer, db.ForeignKey("product_deliveryitem.id"), nullable=False)
+    deliveryitem = db.relationship(DeliveryItem, foreign_keys=[deliveryitem_id], backref="batches")
 
     transporter_id = db.Column(db.Integer, db.ForeignKey("orga_organization.id"), nullable=True)
     transporter = db.relationship(Organisation, foreign_keys=[transporter_id])
@@ -177,4 +177,13 @@ class Batch(db.Model, BaseModel):
     destination_id = db.Column(db.Integer, db.ForeignKey("orga_organization.id"), nullable=True)
     destination = db.relationship(Organisation, foreign_keys=[destination_id])
 
-
+    def to_json(self):
+        return {
+            "reference": self.reference,
+            "status": StatusType.get_name(self.status),
+            "product_reference": self.deliveryitem.product.reference,
+            "delivery_type": ProductType.get_name(self.deliveryitem.type),
+            "destination": self.destination.name if self.destination else None,
+            "transporter": self.transporter.name if self.transporter else None,
+            "count": self.count
+        }

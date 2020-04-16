@@ -210,9 +210,15 @@ class TestDeliveryItem(BaseTest):
 
     def test_create_delivery_batch(self):
 
-        product_repo.generate_batch_from_delivery_item(1000, 40)
-        obj = [it for it in product_repo.list_all_batch_by_destination().items]
-        self.assertEqual(obj,
-                         [(1, 'Couturier 2', product_repo.StatusType.submitted, 40),
-                          (2, 'Couturier 2', product_repo.StatusType.submitted, 40),
-                          (3, 'Couturier 2', product_repo.StatusType.submitted, 40)])
+        obj = product_repo.get_deliveryitem_by_reference_and_type("MTOILE", "kit")
+        product_repo.generate_batch_from_delivery_item(obj, 40)
+        obj = [it for it in product_repo.list_all_batches().items]
+        expected_result = [(1, 'Couturier 2', product_repo.StatusType.submitted, 40),
+                           (2, 'Couturier 2', product_repo.StatusType.submitted, 40),
+                           (3, 'Couturier 2', product_repo.StatusType.submitted, 40)]
+
+        for i, item in enumerate(expected_result):
+            self.assertEqual(str, type(obj[i][0]))
+            self.assertEqual(item[1], obj[i][1])
+            self.assertEqual(item[2], obj[i][2])
+            self.assertEqual(item[3], obj[i][3])

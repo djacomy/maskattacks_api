@@ -237,5 +237,101 @@ class TestDeliveryItem(BaseTest, BaseAuthMixin):
         ]})
 
 
+class TestBatch(BaseTest, BaseAuthMixin):
+    maxDiff = None
+    fixtures = ["refs.json", "users.json", "orga.json", 'product.json', 'stock2.json']
+
+    def test_get_batches(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/batches'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("results", response.json)
+        self.assertEqual(response.json,
+                         {'total': 6, 'page': 1, 'size': 10,
+                          'results': [{'reference': 'batch1',
+                                       'status': 'submitted',
+                                       'product_reference': 'MEFP2',
+                                       'delivery_type': "kit",
+                                       'destination': 'Couturier 1',
+                                       'transporter': None, 'count': 50},
+                                      {'reference': 'batch2', 'status': 'submitted',
+                                       'product_reference': 'MEFP2',
+                                       'delivery_type': "kit",
+                                       'destination': 'Couturier 1', 'transporter': None,
+                                       'count': 50},
+                                      {'reference': 'batch3', 'status': 'submitted',
+                                       'product_reference': 'MEFP2',
+                                       'delivery_type': "kit",
+                                       'destination': 'Couturier 1', 'transporter': None,
+                                       'count': 20},
+                                      {'reference': 'batch4', 'status': 'submitted',
+                                       'product_reference': 'MEFP2',
+                                       'delivery_type': "final",
+                                       'destination': 'Entreprise de textile',
+                                       'transporter': None, 'count': 50},
+                                      {'reference': 'batch5', 'status': 'submitted',
+                                       'product_reference': 'MEFP2',
+                                       'delivery_type': "final",
+                                       'destination': 'Entreprise de textile',
+                                       'transporter': None, 'count': 50},
+                                      {'reference': 'batch6', 'status': 'submitted',
+                                       'product_reference': 'MEFP2',
+                                       'delivery_type': "final",
+                                       'destination': 'Entreprise de textile',
+                                       'transporter': None, 'count': 15}]})
+
+    def test_create_batch(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/batches'
+        response = self.post(url, token, {"reference": "MTOILE",
+                                          "delivery_type": "kit",
+                                          "batch_size": 23})
+        self.assertEqual(response.status_code, 204)
+
+    def test_create_batch_unknown_deliveryitem(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/batches'
+        response = self.post(url, token, {"reference": "MTOILES",
+                                          "delivery_type": "kit",
+                                          "batch_size": 23})
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json,
+                         {'errors': [{'code': 'UNKNOWN_RESOURCE', 'message': 'Unknown ressource'}]})
+
+    def test_create_batch_already_done(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/batches'
+        response = self.post(url, token, {"reference": "MEFP2",
+                                          "delivery_type": "kit",
+                                          "batch_size": 23})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json,
+                         {'errors': [{'code': 'DELIVERYITEM_ALREADY_EXPORTED',
+                                      'message': 'Delivery item MEFP2-kit has been already exported.'}]})
+
+    def test_get_batch(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/batches/batch1'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json,
+                         {'reference': 'batch1',
+                          'status': 'submitted',
+                          'product_reference': 'MEFP2',
+                          'delivery_type': 'kit',
+                          'destination': 'Couturier 1',
+                          'transporter': None,
+                          'count': 50})
+
+    def test_get_batch_unknown_resource(self):
+        token = self.authenticate('joe@example.fr', 'super-secret-password')
+        url = 'api/batches/batch'
+        response = self.get(url, token)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json,
+                         {'errors': [{'code': 'UNKNOWN_RESOURCE', 'message': 'Unknown ressource'}]})
+
+
 if __name__ == '__main__':
     unittest.main()

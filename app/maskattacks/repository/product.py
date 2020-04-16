@@ -2,6 +2,7 @@ import constant
 from uuid import uuid4
 
 from sqlalchemy import *
+from sqlalchemy.orm import aliased
 
 from maskattacks.model.product import *
 from maskattacks.model.orga import Organisation
@@ -54,15 +55,21 @@ def count_all_delivery_by_reference_and_type(page=1, limit=10):
         .paginate(page, limit)
 
 
-def list_all_batch_by_destination(page=1, limit=10):
+def list_all_batches(page=1, limit=10):
     """
 
     :param offset:
     :param limit:
     :return:  Iterator
     """
-    return db.session.query(Batch.id, Organisation.name,  Batch.status, Batch.count)\
-        .join(Organisation, Organisation.id == Batch.destination_id)\
+    destination = aliased(Organisation, name="destination")
+    transporter = aliased(Organisation, name="transporter")
+    return db.session.query(Batch.reference, destination.name,  Batch.status, Batch.count,
+                            DeliveryItem.type, Product.reference, transporter.name)\
+        .join(DeliveryItem,  Batch.deliveryitem) \
+        .join(Product, DeliveryItem.product) \
+        .outerjoin(transporter, Batch.transporter) \
+        .outerjoin(destination, Batch.destination) \
         .paginate(page, limit)
 
 
@@ -106,6 +113,12 @@ def get_deliveryitem_by_reference(reference):
     }
 
 
+def get_deliveryitem_by_reference_and_type(reference, delivery_type):
+    delivery_type_val = ProductType.get_value(delivery_type)
+    return DeliveryItem.query.join(Product, DeliveryItem.product) \
+        .filter(and_(Product.reference == reference, DeliveryItem.type == delivery_type_val)).first()
+
+
 def count_delivery_by_reference_and_type(reference, delivery_type):
     obj = db.session.query(Product.reference, func.sum(DeliveryItem.count))\
         .join(DeliveryItem, DeliveryItem.product_id == Product.id)\
@@ -114,6 +127,10 @@ def count_delivery_by_reference_and_type(reference, delivery_type):
     if obj is None:
         return 0
     return obj[1]
+
+
+def get_batch_by_reference(ref):
+    return Batch.query.filter(Batch.reference == ref).first()
 
 
 def list_stocks_by_reference(reference):
@@ -267,28 +284,23 @@ def create_final_delivery_stock(ref, expected, man):
     return req
 
 
-def generate_batch_from_delivery_item(id, batch_size):
+def generate_batch_from_delivery_item(deliveryitem, batch_size):
+    assert isinstance(deliveryitem, DeliveryItem) == True
+    assert type(batch_size) == int
 
-    obj = DeliveryItem.query.get(id)
-    if not obj:
-        raise ValueError("No delivery item found.")
-
-    nb = len(obj.batches)
-    if nb > 0:
-        raise ValueError("Delivery item has already been packaged.")
-
-    count = obj.count
-    for i in range(0, int(obj.count / batch_size)):
-        if obj.type == ProductType.kit:
-            batch = Batch(count=batch_size, destination=obj.manufactor, deliveryitem=obj, reference=uuid4())
+    count = deliveryitem.count
+    for i in range(0, int(deliveryitem.count / batch_size)):
+        if deliveryitem.type == ProductType.kit:
+            batch = Batch(count=batch_size, destination=deliveryitem.manufactor,
+                          deliveryitem=deliveryitem, reference=uuid4())
         else:
-            batch = Batch(count=batch_size, deliveryitem=obj, reference=uuid4())
+            batch = Batch(count=batch_size, deliveryitem=deliveryitem, reference=uuid4())
         batch.save()
         count -= batch_size
 
     if count > 0:
-        if obj.type == ProductType.kit:
-            batch = Batch(count=count, destination=obj.manufactor, deliveryitem=obj, reference=uuid4())
+        if deliveryitem.type == ProductType.kit:
+            batch = Batch(count=count, destination=deliveryitem.manufactor, deliveryitem=deliveryitem, reference=uuid4())
         else:
-            batch = Batch(count=count, deliveryitem=obj, reference=uuid4())
+            batch = Batch(count=count, deliveryitem=deliveryitem, reference=uuid4())
         batch.save()

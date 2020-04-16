@@ -101,7 +101,7 @@ class DeliveryItemResponseSerializer:
         'type': fields.String,
         'count': fields.Integer
     }
-    required = ["reference", "count"]
+    required = ["reference", "manufactor", "type", "count"]
 
 
 @swagger.model
@@ -113,17 +113,17 @@ class DeliveryItemListResponseSerializer:
         'size': fields.Integer,
         'results': fields.List(fields.Nested(DeliveryItemResponseSerializer.resource_fields)),
     }
-    required = ["reference", "manufactor", "type", "count"]
+    required = ["total", "page", "size", "results"]
 
 
 @swagger.model
 class DeliveryItemUnitSerializer:
     resource_fields = {
-    'type': fields.String,
+        'type': fields.String,
         'manufactor': fields.String,
         'count': fields.Integer
     }
-    required = ["reference", "count"]
+    required = ["type", "manufactor", "count"]
 
 
 @swagger.model
@@ -136,4 +136,40 @@ class DeliveryItemRefResponseSerializer:
     }
     required = ["reference", "deliveries"]
 
+    @swagger.model
+    class DeliveryItemResponseSerializer:
+        resource_fields = {
+            'reference': fields.String,
+            'manufactor': fields.String,
+            'type': fields.String,
+            'count': fields.Integer
+        }
+        required = ["reference", "count"]
 
+
+
+@swagger.model
+class BatchResponseSerializer:
+    resource_fields = {
+        'reference': fields.String,
+        'status': fields.String,
+        'product_reference': fields.String,
+        'delivery_type': fields.String,
+        'destination': fields.String,
+        'transporter': fields.String,
+        'type': fields.String,
+        'count': fields.Integer
+    }
+    required = ["reference", "status", "product_reference",  "delivery_type", "count"]
+
+
+@swagger.model
+@swagger.nested(results=BatchResponseSerializer.__name__)
+class BatchListResponseSerializer:
+    resource_fields = {
+        'total': fields.Integer,
+        'page': fields.Integer,
+        'size': fields.Integer,
+        'results': fields.List(fields.Nested(BatchResponseSerializer.resource_fields)),
+    }
+    required = ["total", "page", "size", "results"]

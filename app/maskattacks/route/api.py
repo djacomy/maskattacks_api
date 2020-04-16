@@ -7,7 +7,8 @@ from config import BASE_SERVER_PATH
 from maskattacks.resource.user import SignupApi, LoginApi
 from maskattacks.resource.orga import OrganisationsApi, OrganisationApi, ReferencesApi
 from maskattacks.resource.user import UserAPI, UserListAPI
-from maskattacks.resource.product import ProductsApi, ProductApi, StocksApi, StockApi, DeliveryItemsApi, DeliveryItemApi
+from maskattacks.resource.product import (ProductsApi, ProductApi, StocksApi, StockApi,
+                                          DeliveryItemsApi, DeliveryItemApi, BatchesApi, BatchApi)
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -33,6 +34,9 @@ api.add_resource(StockApi, '/stocks/<string:reference>')
 
 api.add_resource(DeliveryItemsApi, '/deliveryitems')
 api.add_resource(DeliveryItemApi, '/deliveryitems/<string:reference>')
+
+api.add_resource(BatchesApi, '/batches')
+api.add_resource(BatchApi, '/batches/<string:reference>')
 
 api.add_resource(UserListAPI, '/users')
 api.add_resource(UserAPI, '/users/<int:id>')
