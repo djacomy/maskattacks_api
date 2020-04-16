@@ -99,13 +99,13 @@ class TestStock(BaseTest, BaseAuthMixin):
         url = 'api/stocks'
         response = self.get(url, token, {"page": 1, "size": 3})
         self.assertEqual(response.status_code, 200)
-        self.assertIn("stocks", response.json)
+        self.assertIn("results", response.json)
 
         self.assertEqual(response.json,
                          {'total': 3,
                           'page': 1,
                           'size': 3,
-                          'stocks': [{'reference': 'MEFP2+', 'type': 'kit', 'count': 50},
+                          'results': [{'reference': 'MEFP2+', 'type': 'kit', 'count': 50},
                                      {'reference': 'SAXXYY', 'type': 'materials', 'count': 200},
                                      {'reference': 'SAXXXY', 'type': 'materials', 'count': 200}]})
 

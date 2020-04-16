@@ -64,15 +64,16 @@ class StockResponseSerializer:
 
 
 @swagger.model
-@swagger.nested(stocks=StockResponseSerializer.__name__)
+@swagger.nested(results=StockResponseSerializer.__name__)
 class StockListResponseSerializer:
     resource_fields = {
         'total': fields.Integer,
         'page': fields.Integer,
         'size': fields.Integer,
-        'stocks': fields.List(fields.Nested(StockResponseSerializer.resource_fields)),
+        'results': fields.List(fields.Nested(StockResponseSerializer.resource_fields)),
 
     }
+    required = ['total', "page", 'size', 'results']
 
 @swagger.model
 class StockCreationRequestSerializer:

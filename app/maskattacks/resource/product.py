@@ -257,7 +257,7 @@ class StocksApi(Resource):
         return {"total": obj.total,
                 "page": params.get("page"),
                 "size": params.get("size"),
-                "stocks": [clean(it) for it in obj.items]}, 200
+                "results": [clean(it) for it in obj.items]}, 200
 
     @swagger.operation(
         notes='Stock creation',
