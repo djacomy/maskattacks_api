@@ -60,7 +60,10 @@ class ProductsApi(Resource):
     )
     def get(self, params):
         obj = product_repository.list_product_references(params.get("page"), params.get("size"))
-        return {"products": obj}, 200
+        return {"total": obj.total,
+                "page": params.get("page"),
+                "size": params.get("size"),
+                "results": [item.to_json() for item in obj.items]}, 200
 
     @swagger.operation(
         notes='Product creation',

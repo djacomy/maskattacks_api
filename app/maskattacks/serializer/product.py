@@ -25,11 +25,15 @@ class ProductSerializer:
 
 
 @swagger.model
-@swagger.nested(products=ProductSerializer.__name__)
+@swagger.nested(results=ProductSerializer.__name__)
 class ProductListResponseSerializer:
     resource_fields = {
-        'products': fields.List(fields.Nested(ProductSerializer.resource_fields)),
+        'total': fields.Integer,
+        'page': fields.Integer,
+        'size': fields.Integer,
+        'results': fields.List(fields.Nested(ProductSerializer.resource_fields)),
     }
+    required = ['total', "page", 'size', 'results']
 
 
 @swagger.model

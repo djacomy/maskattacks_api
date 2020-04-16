@@ -58,7 +58,8 @@ class TestStock(BaseTest):
     fixtures = ["refs.json", "users.json", "orga.json", 'product.json']
 
     def test_list_product_references(self):
-        obj = product_repo.list_product_references(1)
+        res = product_repo.list_product_references(1)
+        obj = [item.to_json() for item in res.items]
         self.assertEqual(obj,
                          [{'id': 1000, 'reference': 'SAXXXY', 'type': 'materials',
                            'libelle': 'Tissus de 50m2'},
@@ -84,7 +85,8 @@ class TestStock(BaseTest):
                           ])
 
     def test_list_product_references_page(self):
-        obj = product_repo.list_product_references(2, 3)
+        res = product_repo.list_product_references(2, 3)
+        obj = [item.to_json() for item in res.items]
         self.assertEqual(obj,
                          [{'id': 1003, 'reference': 'MEFP2', 'type': 'final',
                            'libelle': 'Mask efp2',

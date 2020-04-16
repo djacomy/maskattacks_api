@@ -12,9 +12,11 @@ class TestProduct(BaseTest, BaseAuthMixin):
         url = 'api/products'
         response = self.get(url, token, {"page": 2, "size": 3})
         self.assertEqual(response.status_code, 200)
-        self.assertIn("products", response.json)
-        self.assertEqual(3, len(response.json["products"]))
-        self.assertEqual(response.json["products"],
+        self.assertIn("results", response.json)
+        self.assertEqual(6, response.json["total"])
+        self.assertEqual(2, response.json["page"])
+        self.assertEqual(3, response.json["size"])
+        self.assertEqual(response.json["results"],
                          [{'id': 1003, 'reference': 'MEFP2', 'type': 'final',
                            'libelle': 'Mask efp2',
                            'materials': [{'id': 1000, 'reference': 'SAXXXY', 'type': "materials",

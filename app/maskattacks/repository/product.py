@@ -18,7 +18,7 @@ class ProductException(Exception):
 
 
 def list_product_references(page, pernumber=10):
-    return [item.to_json() for item in Product.query.paginate(page, per_page=pernumber).items]
+    return Product.query.paginate(page, per_page=pernumber)
 
 
 def get_product_reference_by_reference(ref):
